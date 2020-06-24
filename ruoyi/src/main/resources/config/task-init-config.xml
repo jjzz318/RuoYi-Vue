@@ -23,7 +23,7 @@
 	-->
 	
 	<task id="DataCodeValueCacheInitTask" classpath = "com.hyrcb.hydp.modules.tool.dataDict.task" title="表字段码值缓存初始化任务" />
-	
+
 	<task id="DataDictCacheInitTask" classpath = "com.hyrcb.hydp.modules.tool.dataDict.task" title="数据字典缓存初始化任务" />
-		 
+
 </tasks>
