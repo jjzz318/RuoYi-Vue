@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询企业清单列表
 export function listCorporation(query) {
   return request({
-    url: '/rbc/corporation/list',
+    url: '/pbc/corporation/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listCorporation(query) {
 // 查询企业清单详细
 export function getCorporation(id) {
   return request({
-    url: '/rbc/corporation/' + id,
+    url: '/pbc/corporation/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getCorporation(id) {
 // 新增企业清单
 export function addCorporation(data) {
   return request({
-    url: '/rbc/corporation',
+    url: '/pbc/corporation',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addCorporation(data) {
 // 修改企业清单
 export function updateCorporation(data) {
   return request({
-    url: '/rbc/corporation',
+    url: '/pbc/corporation',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateCorporation(data) {
 // 删除企业清单
 export function delCorporation(id) {
   return request({
-    url: '/rbc/corporation/' + id,
+    url: '/pbc/corporation/' + id,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delCorporation(id) {
 // 导出企业清单
 export function exportCorporation(query) {
   return request({
-    url: '/rbc/corporation/export',
+    url: '/pbc/corporation/export',
     method: 'get',
     params: query
   })

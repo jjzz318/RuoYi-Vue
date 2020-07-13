@@ -10,7 +10,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="统一社会信用代码" prop="businessLicenseCode">
+      <el-form-item label="营业执照" prop="businessLicenseCode">
         <el-input
           v-model="queryParams.businessLicenseCode"
           placeholder="请输入统一社会信用代码"
@@ -29,19 +29,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="法人姓名" prop="legalPersonName">
+      <el-form-item label="联系人法人姓名" prop="liaisonMan">
         <el-input
-          v-model="queryParams.legalPersonName"
-          placeholder="请输入法人姓名"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="法人身份证" prop="legalPersonIdcard">
-        <el-input
-          v-model="queryParams.legalPersonIdcard"
-          placeholder="请输入法人身份证"
+          v-model="queryParams.liaisonMan"
+          placeholder="请输入联系人法人姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -74,6 +65,24 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="标识" prop="characteristic">
+        <el-input
+          v-model="queryParams.characteristic"
+          placeholder="请输入标识"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="企业规模" prop="scale">
+        <el-input
+          v-model="queryParams.scale"
+          placeholder="请输入企业规模"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -87,7 +96,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['rbc:corporation:add']"
+          v-hasPermi="['pbc:corporation:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -97,7 +106,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['rbc:corporation:edit']"
+          v-hasPermi="['pbc:corporation:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -107,7 +116,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['rbc:corporation:remove']"
+          v-hasPermi="['pbc:corporation:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -116,22 +125,24 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['rbc:corporation:export']"
+          v-hasPermi="['pbc:corporation:export']"
         >导出</el-button>
       </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="corporationList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-
+      <el-table-column label="企业id" align="center" prop="id" />
       <el-table-column label="企业名称" align="center" prop="corporateName" />
-      <el-table-column label="统一社会信用代码" align="center" prop="businessLicenseCode" />
+      <el-table-column label="营业执照" align="center" prop="businessLicenseCode" />
       <el-table-column label="所属行业" align="center" prop="industry" :formatter="industryFormat" />
-      <el-table-column label="法人姓名" align="center" prop="legalPersonName" />
-      <el-table-column label="法人身份证" align="center" prop="legalPersonIdcard" />
+      <el-table-column label="联系人法人姓名" align="center" prop="liaisonMan" />
       <el-table-column label="联系电话" align="center" prop="phone" />
       <el-table-column label="坐标" align="center" prop="location" />
       <el-table-column label="地址" align="center" prop="address" />
+      <el-table-column label="标识" align="center" prop="characteristic" />
+      <el-table-column label="企业规模" align="center" prop="scale" />
+      <el-table-column label="备注" align="center" prop="remarks" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -139,14 +150,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['rbc:corporation:edit']"
+            v-hasPermi="['pbc:corporation:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['rbc:corporation:remove']"
+            v-hasPermi="['pbc:corporation:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -166,23 +177,21 @@
         <el-form-item label="企业名称" prop="corporateName">
           <el-input v-model="form.corporateName" placeholder="请输入企业名称" />
         </el-form-item>
-        <el-form-item label="统一社会信用代码" prop="businessLicenseCode">
+        <el-form-item label="营业执照" prop="businessLicenseCode">
           <el-input v-model="form.businessLicenseCode" placeholder="请输入统一社会信用代码" />
         </el-form-item>
         <el-form-item label="所属行业">
-          <el-radio-group v-model="form.industry">
-            <el-radio
+          <el-select v-model="form.industry" placeholder="请选择所属行业">
+            <el-option
               v-for="dict in industryOptions"
               :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="法人姓名" prop="legalPersonName">
-          <el-input v-model="form.legalPersonName" placeholder="请输入法人姓名" />
-        </el-form-item>
-        <el-form-item label="法人身份证" prop="legalPersonIdcard">
-          <el-input v-model="form.legalPersonIdcard" placeholder="请输入法人身份证" />
+        <el-form-item label="联系人法人姓名" prop="liaisonMan">
+          <el-input v-model="form.liaisonMan" placeholder="请输入联系人法人姓名" />
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入联系电话" />
@@ -193,8 +202,17 @@
         <el-form-item label="地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入地址" />
         </el-form-item>
+        <el-form-item label="标识" prop="characteristic">
+          <el-input v-model="form.characteristic" placeholder="请输入标识" />
+        </el-form-item>
+        <el-form-item label="企业规模" prop="scale">
+          <el-input v-model="form.scale" placeholder="请输入企业规模" />
+        </el-form-item>
         <el-form-item label="删除标志" prop="delFlag">
           <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remarks">
+          <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -206,7 +224,7 @@
 </template>
 
 <script>
-import { listCorporation, getCorporation, delCorporation, addCorporation, updateCorporation, exportCorporation } from "@/api/rbc/corporation";
+import { listCorporation, getCorporation, delCorporation, addCorporation, updateCorporation, exportCorporation } from "@/api/pbc/corporation";
 
 export default {
   name: "Corporation",
@@ -237,19 +255,32 @@ export default {
         corporateName: undefined,
         businessLicenseCode: undefined,
         industry: undefined,
-        legalPersonName: undefined,
-        legalPersonIdcard: undefined,
+        liaisonMan: undefined,
         phone: undefined,
         location: undefined,
         address: undefined,
+        characteristic: undefined,
+        scale: undefined,
+        remarks: undefined,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        corporateName: [
+         corporateName: [
           { required: true, message: "企业名称不能为空", trigger: "blur" }
         ],
+        businessLicenseCode:[
+          { required: true, message: "营业执照不能为空", trigger: "blur" }
+        ],
+        phone: [
+          { required: true, message: "手机号码不能为空", trigger: "blur" },
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
+        ]
       }
     };
   },
@@ -284,13 +315,16 @@ export default {
         id: undefined,
         corporateName: undefined,
         businessLicenseCode: undefined,
-        industry: "0",
-        legalPersonName: undefined,
-        legalPersonIdcard: undefined,
+        industry: undefined,
+        liaisonMan: undefined,
         phone: undefined,
         location: undefined,
         address: undefined,
+        characteristic: undefined,
+        scale: undefined,
+        state: undefined,
         delFlag: undefined,
+        remarks: undefined,
         createBy: undefined,
         createTime: undefined,
         updateBy: undefined,

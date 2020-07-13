@@ -1,4 +1,4 @@
-package com.hyrcb.hydp.modules.rcb.domain;
+package com.hyrcb.hydp.modules.pbc.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -10,14 +10,14 @@ import java.util.Date;
 
 
 /**
- * 企业清单对象 rbc_corporation_list
+ * 企业清单对象 pbc_corporation_list
  * 
  * @author shenzulun
- * @date 2020-06-24
+ * @date 2020-07-13
  */
 
-@TableName("rbc_corporation_list")
-public class RbcCorporationList implements Serializable {
+@TableName("pbc_corporation_list")
+public class PbcCorporationList implements Serializable {
 
 private static final long serialVersionUID=1L;
 
@@ -38,13 +38,9 @@ private static final long serialVersionUID=1L;
     @Excel(name = "所属行业")
     private String industry;
 
-    /** 法人姓名 */
-    @Excel(name = "法人姓名")
-    private String legalPersonName;
-
-    /** 法人身份证 */
-    @Excel(name = "法人身份证")
-    private String legalPersonIdcard;
+    /** 联系人法人姓名 */
+    @Excel(name = "联系人法人姓名")
+    private String liaisonMan;
 
     /** 联系电话 */
     @Excel(name = "联系电话")
@@ -58,8 +54,24 @@ private static final long serialVersionUID=1L;
     @Excel(name = "地址")
     private String address;
 
+    /** 标识 */
+    @Excel(name = "标识")
+    private String characteristic;
+
+    /** 企业规模 */
+    @Excel(name = "企业规模")
+    private String scale;
+
+    /** 0未解决，1已解决，2需要协助解决，3不予解决 */
+    @Excel(name = "0未解决，1已解决，2需要协助解决，3不予解决")
+    private Long state;
+
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
+
+    /** 备注 */
+    @Excel(name = "备注")
+    private String remarks;
 
     /** 创建者 */
     private String createBy;
@@ -101,19 +113,12 @@ private static final long serialVersionUID=1L;
     public String getIndustry() {
         return industry;
     }
-    public void setLegalPersonName(String legalPersonName) {
-        this.legalPersonName = legalPersonName;
+    public void setLiaisonMan(String liaisonMan) {
+        this.liaisonMan = liaisonMan;
     }
 
-    public String getLegalPersonName() {
-        return legalPersonName;
-    }
-    public void setLegalPersonIdcard(String legalPersonIdcard) {
-        this.legalPersonIdcard = legalPersonIdcard;
-    }
-
-    public String getLegalPersonIdcard() {
-        return legalPersonIdcard;
+    public String getLiaisonMan() {
+        return liaisonMan;
     }
     public void setPhone(String phone) {
         this.phone = phone;
@@ -136,12 +141,40 @@ private static final long serialVersionUID=1L;
     public String getAddress() {
         return address;
     }
+    public void setCharacteristic(String characteristic) {
+        this.characteristic = characteristic;
+    }
+
+    public String getCharacteristic() {
+        return characteristic;
+    }
+    public void setScale(String scale) {
+        this.scale = scale;
+    }
+
+    public String getScale() {
+        return scale;
+    }
+    public void setState(Long state) {
+        this.state = state;
+    }
+
+    public Long getState() {
+        return state;
+    }
     public void setDelFlag(String delFlag) {
         this.delFlag = delFlag;
     }
 
     public String getDelFlag() {
         return delFlag;
+    }
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getRemarks() {
+        return remarks;
     }
     public void setCreateBy(String createBy) {
         this.createBy = createBy;
