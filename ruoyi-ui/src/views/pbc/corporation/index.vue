@@ -29,7 +29,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="联系人法人姓名" prop="liaisonMan">
+      <el-form-item label="联系人" prop="liaisonMan">
         <el-input
           v-model="queryParams.liaisonMan"
           placeholder="请输入联系人法人姓名"
@@ -136,7 +136,7 @@
       <el-table-column label="企业名称" align="center" prop="corporateName" />
       <el-table-column label="营业执照" align="center" prop="businessLicenseCode" />
       <el-table-column label="所属行业" align="center" prop="industry" :formatter="industryFormat" />
-      <el-table-column label="联系人法人姓名" align="center" prop="liaisonMan" />
+      <el-table-column label="联系人" align="center" prop="liaisonMan" />
       <el-table-column label="联系电话" align="center" prop="phone" />
       <el-table-column label="坐标" align="center" prop="location" />
       <el-table-column label="地址" align="center" prop="address" />
