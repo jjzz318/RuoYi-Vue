@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import LoanApplication from '@/views/crm/LoanApplication'
 Vue.use(Router)
 
 /* Layout */
@@ -36,6 +36,14 @@ export const constantRoutes = [
         component: (resolve) => require(['@/views/redirect'], resolve)
       }
     ]
+  },
+  {
+    path: '/crm/LoanApplication',
+    name: 'LoanApplication',
+    component: LoanApplication,
+    meta:{
+      title: '贷款申请'
+    }
   },
   {
     path: '/login',
