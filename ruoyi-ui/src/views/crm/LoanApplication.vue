@@ -64,7 +64,9 @@
         placeholder="用户名"
         :rules="[{ required: true, message: '请填写用户名' }]"
       />
-     
+      <div style="margin: 16px;">
+        <van-button round block type="info" native-type="submit">提交</van-button>
+      </div>
     </van-form>
   </div>
 </template>
@@ -74,9 +76,9 @@ import { Button } from "vant";
 import { NavBar } from "vant";
 import { Col, Row } from "vant";
 import { Icon } from "vant";
-
 import { Form } from "vant";
 import { Field } from "vant";
+import { apply } from "@/api/crm/LoanApplication";
 export default {
   name: "LoanApplication",
   components: {
@@ -91,20 +93,27 @@ export default {
   created: function () {},
   data() {
     return {
-      username: "",
-      password: "",
+
     };
+  },
+  mounted() {
+    document
+      .querySelector("body")
+      .setAttribute("style", "background-color:#f0f0f0");
+  },
+  beforeDestroy() {
+    document.querySelector("body").removeAttribute("style");
   },
   methods: {
     onSubmit(values) {
-    //   apply(values)
-    //     .then((res) => {
-    //       console.log(res.username);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    //   console.log("submit", values);
+        apply(values)
+          .then((res) => {
+            console.log(res.username);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        console.log("submit", values);
     },
   },
 };
@@ -115,7 +124,7 @@ export default {
 .panel_block {
   background-color: #ffffff;
   border-radius: 8px;
-  height: 150px;
+  height: 180px;
   margin-left: 15px;
   margin-right: 15px;
   margin-top: 10px;
@@ -124,7 +133,6 @@ export default {
 .panel_block2 {
   background-color: #e4e4e3;
   border-radius: 8px;
-  height: 50px;
   margin-left: 15px;
   margin-right: 15px;
   margin-top: 10px;
@@ -179,3 +187,5 @@ export default {
   border-bottom: 1px solid #dfdfdf;
 }
 </style>
+
+

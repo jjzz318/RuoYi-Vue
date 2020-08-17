@@ -13,16 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Api("对外用户接口")
-@RestController
 @RequestMapping("/openApi/user")
 public class UserController {
-    @ApiOperation("用户登录")
-    @PostMapping("/login")
-    public AjaxResult login(@RequestBody Map map) {
-        System.out.println(map.get("username"));
-        AjaxResult ajaxResult=new AjaxResult().success();
-        ajaxResult.put("username",map.get("username"));
-        return ajaxResult;
+    //    @ApiOperation("用户登录")
+//    @PostMapping("/login")
+//    public AjaxResult login(@RequestBody Map map) {
+//        System.out.println(map.get("username"));
+//        AjaxResult ajaxResult=new AjaxResult().success();
+//        ajaxResult.put("username",map.get("username"));
+//        return ajaxResult;
+//    }
+    @GetMapping("/login")
+    public String  login() {
+        String txt = "11222";
+        return txt;
     }
 }

@@ -39,11 +39,8 @@ export const constantRoutes = [
   },
   {
     path: '/crm/LoanApplication',
-    name: 'LoanApplication',
-    component: LoanApplication,
-    meta:{
-      title: '贷款申请'
-    }
+    component: (resolve) => require(['@/views/crm/LoanApplication'], resolve),
+    hidden: true
   },
   {
     path: '/login',
