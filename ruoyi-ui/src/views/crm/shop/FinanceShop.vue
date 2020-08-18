@@ -30,7 +30,7 @@
     <div class="panel_block2">有多年金融行业经验，具有丰富的理财业务知识，熟知各项理财产品，能根据市场变化，和客户个人情况，为其提供最合适的金融产品。</div>
     <van-cell-group class="panel_block3">
       <van-cell title="贷款产品" icon="card" is-link />
-      <van-cell  v-for="p in productList" :title="p.name" size="large"  :label="p.money" url="/LoanApplication" />
+      <van-cell   v-for="(p,index) in productList" :title="p.name" size="large" v-bind:key="index" :label="p.money" url="/LoanApplication" />
 
     </van-cell-group>
   </div>
@@ -57,8 +57,8 @@ export default {
   },
   data() {
     return {
-      productList: [],
-    };
+      productList: [{"id":1,"type":"1001","name":"浙里贷-公积金贷","money":"贷款额度30万","interestRate":"4.6","content":"有公积金的都可以贷款"},{"id":2,"type":"1001","name":"浙里贷-青年市民贷","money":"贷款额度10万","interestRate":"5.2","content":null},{"id":3,"type":"1001","name":"浙里贷-优信贷","money":"贷款额度30万","interestRate":"4.4","content":null}],
+    }
   },
   created: function () {
     this.getList();
