@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import java.util.List;
 import java.util.Arrays;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.web.page.PageDomain;
+import com.ruoyi.framework.web.page.TableSupport;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +42,9 @@ public class ProductController extends BaseController {
     @GetMapping("/api/getList")
     public TableDataInfo apiGetList(Product product){
         startPage();
+        System.out.println("进入");
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        System.out.println(pageDomain.getPageNum());
         LambdaQueryWrapper<Product> lqw = new LambdaQueryWrapper<Product>();
         if (StringUtils.isNotBlank(product.getType())){
             lqw.eq(Product::getType ,product.getType());

@@ -30,8 +30,17 @@
     <div class="panel_block2">有多年金融行业经验，具有丰富的理财业务知识，熟知各项理财产品，能根据市场变化，和客户个人情况，为其提供最合适的金融产品。</div>
     <van-cell-group class="panel_block3">
       <van-cell title="贷款产品" icon="card" is-link />
-      <van-cell   v-for="(p,index) in productList" :title="p.name" size="large" v-bind:key="index" :label="p.money" url="/LoanApplication" />
+      <van-cell    v-for="(item, index) in loanProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/LoanApplication?id='+item.id" />
+    </van-cell-group>
 
+    <van-cell-group class="panel_block3">
+      <van-cell title="存款产品" icon="card" is-link />
+      <van-cell    v-for="(item, index) in depProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/LoanApplication?id='+item.id" />
+    </van-cell-group>
+
+    <van-cell-group class="panel_block3">
+      <van-cell title="其他产品" icon="card" is-link />
+      <van-cell    v-for="(item, index) in otherProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/LoanApplication?id='+item.id" />
     </van-cell-group>
   </div>
 </template>
@@ -57,7 +66,9 @@ export default {
   },
   data() {
     return {
-      productList: [{"id":1,"type":"1001","name":"浙里贷-公积金贷","money":"贷款额度30万","interestRate":"4.6","content":"有公积金的都可以贷款"},{"id":2,"type":"1001","name":"浙里贷-青年市民贷","money":"贷款额度10万","interestRate":"5.2","content":null},{"id":3,"type":"1001","name":"浙里贷-优信贷","money":"贷款额度30万","interestRate":"4.4","content":null}],
+      loanProductList: [],
+      depProductList: [],
+      otherProductList: [],
     }
   },
   created: function () {
@@ -66,18 +77,19 @@ export default {
   methods: {
     /** 查询产品管理列表 */
     getList() {
-      var queryParams = {
-        pageNum: 1,
-        pageSize: 10,
-        type: "1001",
-        name: undefined,
-        money: undefined,
-        interestRate: undefined,
-        content: undefined,
-      };
       this.loading = true;
-      apiListProduct(this.queryParams).then((response) => {
-        this.productList = response.rows;
+      apiListProduct({type: "1001"}).then((response) => {
+        this.loanProductList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+      apiListProduct({type: "1002"}).then((response) => {
+        this.depProductList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+      apiListProduct({type: "1003"}).then((response) => {
+        this.otherProductList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -90,11 +102,6 @@ export default {
   },
   beforeDestroy() {
     document.querySelector("body").removeAttribute("style");
-  },
-  data() {
-    return {
-      msg: "Welcome to Your Vue.js App",
-    };
   },
 };
 </script>
