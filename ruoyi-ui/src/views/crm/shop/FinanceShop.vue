@@ -30,17 +30,17 @@
     <div class="panel_block2">有多年金融行业经验，具有丰富的理财业务知识，熟知各项理财产品，能根据市场变化，和客户个人情况，为其提供最合适的金融产品。</div>
     <van-cell-group class="panel_block3">
       <van-cell title="贷款产品" icon="card" is-link />
-      <van-cell    v-for="(item, index) in loanProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/LoanApplication?id='+item.id" />
+      <van-cell    v-for="(item, index) in loanProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/shop/LoanApplication?id='+item.id" />
     </van-cell-group>
 
     <van-cell-group class="panel_block3">
       <van-cell title="存款产品" icon="card" is-link />
-      <van-cell    v-for="(item, index) in depProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/LoanApplication?id='+item.id" />
+      <van-cell    v-for="(item, index) in depProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/shop/LoanApplication?id='+item.id" />
     </van-cell-group>
 
     <van-cell-group class="panel_block3">
       <van-cell title="其他产品" icon="card" is-link />
-      <van-cell    v-for="(item, index) in otherProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/LoanApplication?id='+item.id" />
+      <van-cell    v-for="(item, index) in otherProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/shop/crm/LoanApplication?id='+item.id" />
     </van-cell-group>
   </div>
 </template>

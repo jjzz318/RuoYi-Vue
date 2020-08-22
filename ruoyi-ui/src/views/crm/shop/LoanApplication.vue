@@ -2,11 +2,11 @@
   <div id="App">
     <div class="panel_block">
       <div class="Photo">
-        <img src="./../../assets/171579081443_.pic_hd.jpg" class="Photo" />
+        <img src="@/assets/171579081443_.pic_hd.jpg" class="Photo" />
       </div>
       <div class="introduce">
         <div class="title">
-          <img src="./../../assets/logo.png" class="logo" />
+          <img src="@/assets/logo.png" class="logo" />
         </div>
         <div class="title2">
           <b>农商小陈</b>
@@ -28,42 +28,65 @@
       </div>
     </div>
     <div class="panel_block2">有多年金融行业经验，具有丰富的理财业务知识，熟知各项理财产品，能根据市场变化，和客户个人情况，为其提供最合适的金融产品。</div>
+    <van-cell-group class="panel_block3">
+      <van-cell title="产品介绍" icon="card" />
+      <van-cell value="内容" />
+    </van-cell-group>
     <van-form @submit="onSubmit" class="panel_block3">
       <van-field
-        v-model="username"
-        name="username"
+        v-model="idcard_code"
+        name="idcard_code"
         label="身份证"
-        placeholder="用户名"
-        :rules="[{ required: true, message: '请填写用户名' }]"
+        placeholder="身份证"
+        :rules="[{ required: true, message: '请填写正确的身份证号码' }]"
       />
       <van-field
-        v-model="username"
-        name="username"
+        v-model="liaison_man"
+        name="liaison_man"
         label="申请人"
         placeholder="申请人"
-        :rules="[{ required: true, message: '请填写用户名' }]"
+        :rules="[{ required: true, message: '请填写申请人姓名' }]"
       />
       <van-field
-        v-model="username"
-        name="username"
+        v-model="money"
+        name="money"
         label="期望额度"
-        placeholder="用户名"
-        :rules="[{ required: true, message: '请填写用户名' }]"
+        placeholder="期望额度"
+        :rules="[{ required: true, message: '请填写期望额度' }]"
       />
       <van-field
-        v-model="username"
-        name="username"
+        v-model="address"
+        name="address"
         label="详细地址"
-        placeholder="用户名"
-        :rules="[{ required: true, message: '请填写用户名' }]"
+        placeholder="详细地址"
+        :rules="[{ required: true, message: '请填写详细地址' }]"
       />
       <van-field
-        v-model="username"
-        name="username"
+        v-model="phone"
+        name="phone"
         label="手机号"
-        placeholder="用户名"
-        :rules="[{ required: true, message: '请填写用户名' }]"
+        placeholder="手机号"
+        :rules="[{ required: true, message: '请填写手机号码' }]"
       />
+      <van-field
+        v-model="phone"
+        name="phone"
+        label="验证码"
+        placeholder="验证码"
+        :rules="[{ required: true, message: '验证码' }]"
+      >
+        <van-button
+          round
+          block
+          slot="button"
+          size="small"
+          type="primary"
+          native-type="button"
+          :disabled="disabled"
+          @click="onSendCode()"
+        >{{btnTxt}}</van-button>
+      </van-field>
+
       <div style="margin: 16px;">
         <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
@@ -78,7 +101,9 @@ import { Col, Row } from "vant";
 import { Icon } from "vant";
 import { Form } from "vant";
 import { Field } from "vant";
+import { Cell, CellGroup } from "vant";
 import { apply } from "@/api/crm/LoanApplication";
+import { sendVerifyCode } from "@/api/crm/shop/msg.js";
 export default {
   name: "LoanApplication",
   components: {
@@ -89,11 +114,21 @@ export default {
     [Icon.name]: Icon,
     [Form.name]: Form,
     [Field.name]: Field,
+    [Cell.name]: Cell,
+    [CellGroup.name]: CellGroup,
   },
   created: function () {},
   data() {
     return {
-
+      idcard_code: "",
+      liaison_man: "",
+      money: "",
+      address: "",
+      phone: "",
+      checkbox: false,
+      codeTime: 60,
+      btnTxt: "发送验证码",
+      disabled: false,
     };
   },
   mounted() {
@@ -106,14 +141,39 @@ export default {
   },
   methods: {
     onSubmit(values) {
-        apply(values)
-          .then((res) => {
-            console.log(res.username);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        console.log("submit", values);
+      apply(values)
+        .then((res) => {
+          console.log(res.username);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log("submit", values);
+    },
+    onSendCode() {
+      this.codeTime = 60;
+      this.startTimer();
+       sendVerifyCode({phone: "15867009090"})
+        .then((res) => {
+          console.log(res.username);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    startTimer() {
+      console.log(this.codeTime);
+      if (this.codeTime > 0) {
+        this.disabled = true;
+        this.codeTime--;
+        this.btnTxt = this.codeTime + "秒";
+
+        setTimeout(this.startTimer, 1000);
+      } else {
+        this.codeTime = 0;
+        this.btnTxt = "发送验证码";
+        this.disabled = false;
+      }
     },
   },
 };

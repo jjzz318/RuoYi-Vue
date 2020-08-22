@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import LoanApplication from '@/views/crm/LoanApplication'
+
 Vue.use(Router)
 
 /* Layout */
@@ -38,8 +38,8 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/crm/LoanApplication',
-    component: (resolve) => require(['@/views/crm/LoanApplication'], resolve),
+    path: '/crm/shop/LoanApplication',
+    component: (resolve) => require(['@/views/crm/shop/LoanApplication'], resolve),
     hidden: true
   },
   {
