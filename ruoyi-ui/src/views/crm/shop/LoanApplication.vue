@@ -69,8 +69,8 @@
         :rules="[{ required: true, message: '请填写手机号码' }]"
       />
       <van-field
-        v-model="phone"
-        name="phone"
+        v-model="verifyCode"
+        name="verifyCode"
         label="验证码"
         placeholder="验证码"
         :rules="[{ required: true, message: '验证码' }]"
@@ -103,6 +103,7 @@ import { Form } from "vant";
 import { Field } from "vant";
 import { Cell, CellGroup } from "vant";
 import { apply } from "@/api/crm/LoanApplication";
+import { Notify } from 'vant';
 import { sendVerifyCode } from "@/api/crm/shop/msg.js";
 export default {
   name: "LoanApplication",
@@ -116,6 +117,7 @@ export default {
     [Field.name]: Field,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
+    [Notify.Component.name]:Notify
   },
   created: function () {},
   data() {
@@ -125,6 +127,7 @@ export default {
       money: "",
       address: "",
       phone: "",
+      verifyCode:'',
       checkbox: false,
       codeTime: 60,
       btnTxt: "发送验证码",
@@ -151,9 +154,13 @@ export default {
       console.log("submit", values);
     },
     onSendCode() {
+      if(this.phone.length!=11){
+          Notify('请输入正确的手机号码');
+          return;
+      }
       this.codeTime = 60;
       this.startTimer();
-       sendVerifyCode({phone: "15867009090"})
+       sendVerifyCode({phone: this.phone})
         .then((res) => {
           console.log(res.username);
         })
