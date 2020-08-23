@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyrcb.hydp.modules.crm.mapper.ApplyOnlineMapper">
+    
+    <resultMap type="ApplyOnline" id="ApplyOnlineResult">
+        <result property="id"    column="id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="idcardCode"    column="idcard_code"    />
+        <result property="liaisonMan"    column="liaison_man"    />
+        <result property="phone"    column="phone"    />
+        <result property="address"    column="address"    />
+        <result property="verifyCode"    column="verify_code"    />
+        <result property="areaCode"    column="area_code"    />
+        <result property="areaCode2"    column="area_code2"    />
+        <result property="state"    column="state"    />
+        <result property="money"    column="money"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="orgCode"    column="org_code"    />
+        <result property="staffCode"    column="staff_code"    />
+        <result property="confirmStaffCode"    column="confirm_staff_code"    />
+        <result property="confirmTime"    column="confirm_time"    />
+        <result property="handleStaffCode"    column="handle_staff_code"    />
+        <result property="handleTime"    column="handle_time"    />
+        <result property="closeStaffCode"    column="close_staff_code"    />
+        <result property="closeReason"    column="close_reason"    />
+        <result property="closeTime"    column="close_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+</mapper>

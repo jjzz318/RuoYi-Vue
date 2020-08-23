@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 // 查询产品管理列表
 export function apiListProduct(query) {
-  
-  console.log(query)
   return request({
     url: '/crm/product/api/getList',
     method: 'get',
     params: query
   })
 }
+
+
 
 // 查询产品管理列表
 export function listProduct(query) {

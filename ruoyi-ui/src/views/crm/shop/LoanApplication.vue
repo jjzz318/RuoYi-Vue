@@ -29,8 +29,8 @@
     </div>
     <div class="panel_block2">有多年金融行业经验，具有丰富的理财业务知识，熟知各项理财产品，能根据市场变化，和客户个人情况，为其提供最合适的金融产品。</div>
     <van-cell-group class="panel_block3">
-      <van-cell title="产品介绍" icon="card" />
-      <van-cell value="内容" />
+      <van-cell :title="productInfo.name" icon="card" />
+      <van-cell :value="productInfo.content" />
     </van-cell-group>
     <van-form @submit="onSubmit" class="panel_block3">
       <van-field
@@ -103,8 +103,9 @@ import { Form } from "vant";
 import { Field } from "vant";
 import { Cell, CellGroup } from "vant";
 import { apply } from "@/api/crm/LoanApplication";
-import { Notify } from 'vant';
+import { Notify } from "vant";
 import { sendVerifyCode } from "@/api/crm/shop/msg.js";
+import { getProduct } from "@/api/crm/product";
 export default {
   name: "LoanApplication",
   components: {
@@ -117,17 +118,21 @@ export default {
     [Field.name]: Field,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
-    [Notify.Component.name]:Notify
+    [Notify.Component.name]: Notify,
   },
-  created: function () {},
+  created: function () {
+    this.getProduct();
+    
+  },
   data() {
     return {
+      productInfo: [],
       idcard_code: "",
       liaison_man: "",
       money: "",
       address: "",
       phone: "",
-      verifyCode:'',
+      verifyCode: "",
       checkbox: false,
       codeTime: 60,
       btnTxt: "发送验证码",
@@ -143,6 +148,20 @@ export default {
     document.querySelector("body").removeAttribute("style");
   },
   methods: {
+    getQueryString(name) {
+      let reg = `(^|&)${name}=([^&]*)(&|$)`;
+      let r = window.location.search.substr(1).match(reg);
+      if (r != null) return unescape(r[2]);
+      return null;
+    },
+    getProduct() {
+      this.loading = true;
+      var id = this.getQueryString("id");
+      getProduct(id).then((response) => {
+        this.productInfo = response.data;
+        this.loading = false;
+      });
+    },
     onSubmit(values) {
       apply(values)
         .then((res) => {
@@ -154,13 +173,13 @@ export default {
       console.log("submit", values);
     },
     onSendCode() {
-      if(this.phone.length!=11){
-          Notify('请输入正确的手机号码');
-          return;
+      if (this.phone.length != 11) {
+        Notify("请输入正确的手机号码");
+        return;
       }
       this.codeTime = 60;
       this.startTimer();
-       sendVerifyCode({phone: this.phone})
+      sendVerifyCode({ phone: this.phone })
         .then((res) => {
           console.log(res.username);
         })

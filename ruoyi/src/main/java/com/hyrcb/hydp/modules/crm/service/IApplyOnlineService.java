@@ -1,9 +1,14 @@
 package com.hyrcb.hydp.modules.crm.service;
 
+import com.hyrcb.hydp.modules.crm.domain.ApplyOnline;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hyrcb.hydp.modules.crm.domain.Product;
-import com.ruoyi.framework.web.domain.AjaxResult;
 
-public interface IApplyOnlineService extends IService <Product> {
-    public AjaxResult sendVerifyCode(String phone);
+/**
+ * 在线申请清单Service接口
+ *
+ * @author shenzulun
+ * @date 2020-08-23
+ */
+public interface IApplyOnlineService extends IService<ApplyOnline> {
+
 }

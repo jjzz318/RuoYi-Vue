@@ -38,6 +38,11 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/crm/shop/home',
+    component: (resolve) => require(['@/views/crm/shop/home'], resolve),
+    hidden: true
+  },
+  {
     path: '/crm/shop/LoanApplication',
     component: (resolve) => require(['@/views/crm/shop/LoanApplication'], resolve),
     hidden: true
@@ -121,7 +126,7 @@ export const constantRoutes = [
     hidden: true,
     children: [
       {
-        path: 'edit',
+        path: 'edit/:tableId(\\d+)',
         component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
         name: 'GenEdit',
         meta: { title: '修改生成配置' }
