@@ -57,6 +57,14 @@ public class ApplyOnlineController extends BaseController {
         boolean ret= Db.save("sys_verify_code",record);
         return AjaxResult.success();
     }
+
+    @PostMapping("/applyLoan")
+    public AjaxResult applyLoan(@RequestBody ApplyOnline applyOnline){
+        System.out.println("手机:"+applyOnline.getIdcardCode());
+
+        return toAjax(iApplyOnlineService.save(applyOnline) ? 1 : 0);
+        //return  AjaxResult.success();
+    }
     /**
      * 查询在线申请清单列表
      */

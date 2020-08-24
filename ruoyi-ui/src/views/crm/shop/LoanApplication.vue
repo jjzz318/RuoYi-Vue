@@ -32,44 +32,52 @@
       <van-cell :title="productInfo.name" icon="card" />
       <van-cell :value="productInfo.content" />
     </van-cell-group>
-    <van-form @submit="onSubmit" class="panel_block3">
+    <van-form @submit="onSubmit" :model="form" ref="form" class="panel_block3">
+       <van-field
+        v-model="form.productId"
+        name="productId"
+        label="产品id"
+        placeholder="产品id"
+        :rules="[{ required: true, message: '产品id' }]"
+        v-show="false"
+      />
       <van-field
-        v-model="idcard_code"
-        name="idcard_code"
+        v-model="form.idcardCode"
+        name="idcardCode"
         label="身份证"
         placeholder="身份证"
         :rules="[{ required: true, message: '请填写正确的身份证号码' }]"
       />
       <van-field
-        v-model="liaison_man"
-        name="liaison_man"
+        v-model="form.liaisonMan"
+        name="liaisonMan"
         label="申请人"
         placeholder="申请人"
         :rules="[{ required: true, message: '请填写申请人姓名' }]"
       />
       <van-field
-        v-model="money"
+        v-model="form.money"
         name="money"
         label="期望额度"
         placeholder="期望额度"
         :rules="[{ required: true, message: '请填写期望额度' }]"
       />
       <van-field
-        v-model="address"
+        v-model="form.address"
         name="address"
         label="详细地址"
         placeholder="详细地址"
         :rules="[{ required: true, message: '请填写详细地址' }]"
       />
       <van-field
-        v-model="phone"
+        v-model="form.phone"
         name="phone"
         label="手机号"
         placeholder="手机号"
         :rules="[{ required: true, message: '请填写手机号码' }]"
       />
       <van-field
-        v-model="verifyCode"
+        v-model="form.verifyCode"
         name="verifyCode"
         label="验证码"
         placeholder="验证码"
@@ -105,7 +113,7 @@ import { Cell, CellGroup } from "vant";
 import { apply } from "@/api/crm/LoanApplication";
 import { Notify } from "vant";
 import { sendVerifyCode } from "@/api/crm/shop/msg.js";
-import { getProduct } from "@/api/crm/product";
+import { apiGetProduct } from "@/api/crm/product";
 export default {
   name: "LoanApplication",
   components: {
@@ -127,16 +135,12 @@ export default {
   data() {
     return {
       productInfo: [],
-      idcard_code: "",
-      liaison_man: "",
-      money: "",
-      address: "",
-      phone: "",
-      verifyCode: "",
       checkbox: false,
       codeTime: 60,
       btnTxt: "发送验证码",
       disabled: false,
+      // 表单参数
+      form: {},
     };
   },
   mounted() {
@@ -157,13 +161,15 @@ export default {
     getProduct() {
       this.loading = true;
       var id = this.getQueryString("id");
-      getProduct(id).then((response) => {
+      this.form.product_id=id;
+      apiGetProduct(id).then((response) => {
         this.productInfo = response.data;
         this.loading = false;
       });
     },
     onSubmit(values) {
-      apply(values)
+      console.log(this.form)
+      apply(this.form)
         .then((res) => {
           console.log(res.username);
         })
@@ -173,13 +179,13 @@ export default {
       console.log("submit", values);
     },
     onSendCode() {
-      if (this.phone.length != 11) {
+      if (this.form.phone.length != 11) {
         Notify("请输入正确的手机号码");
         return;
       }
       this.codeTime = 60;
       this.startTimer();
-      sendVerifyCode({ phone: this.phone })
+      sendVerifyCode({ phone: this.form.phone })
         .then((res) => {
           console.log(res.username);
         })

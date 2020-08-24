@@ -39,6 +39,7 @@ public class ProductController extends BaseController {
 
     @Autowired
     private IProductService iProductService;
+
     @GetMapping("/api/getList")
     public TableDataInfo apiGetList(Product product){
         startPage();
@@ -52,6 +53,15 @@ public class ProductController extends BaseController {
         List<Product> list = iProductService.list(lqw);
         return getDataTable(list);
     }
+
+    /**
+     * 获取产品管理详细信息
+     */
+    @GetMapping(value = "/api/{id}" )
+    public AjaxResult apiGetInfo(@PathVariable("id" ) Long id) {
+        return AjaxResult.success(iProductService.getById(id));
+    }
+
     /**
      * 查询产品管理列表
      */

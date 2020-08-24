@@ -8,7 +8,13 @@ export function apiListProduct(query) {
     params: query
   })
 }
-
+// 查询产品管理详细
+export function apiGetProduct(id) {
+  return request({
+    url: '/crm/product/api/' + id,
+    method: 'get'
+  })
+}
 
 
 // 查询产品管理列表
