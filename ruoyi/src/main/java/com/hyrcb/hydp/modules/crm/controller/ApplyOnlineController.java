@@ -38,97 +38,106 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 
 @RestController
-@RequestMapping("/crm/ApplyOnline" )
+@RequestMapping("/crm/ApplyOnline")
 public class ApplyOnlineController extends BaseController {
 
     @Autowired
     private IApplyOnlineService iApplyOnlineService;
 
     @GetMapping("/sendVerifyCode")
-    public AjaxResult sendVerifyCode(String phone){
+    public AjaxResult sendVerifyCode(String phone) {
         String code = RandomUtil.randomNumber(6);
-        SMSUtil.sendSMS(phone,code);
-        Record record=new Record();
-        record.set("type","贷款申请");
-        record.set("code",code);
-        record.set("send_time",new Date());
-        record.set("phone",phone);
-        record.set("state",0);
-        boolean ret= Db.save("sys_verify_code",record);
+        SMSUtil.sendSMS(phone, code);
+        Record record = new Record();
+        record.set("type", "贷款申请");
+        record.set("code", code);
+        record.set("send_time", new Date());
+        record.set("phone", phone);
+        record.set("state", 0);
+        boolean ret = Db.save("sys_verify_code", record);
         return AjaxResult.success();
     }
 
     @PostMapping("/applyLoan")
-    public AjaxResult applyLoan(@RequestBody ApplyOnline applyOnline){
-        System.out.println("手机:"+applyOnline.getIdcardCode());
+    public AjaxResult applyLoan(@RequestBody ApplyOnline applyOnline) {
 
-        return toAjax(iApplyOnlineService.save(applyOnline) ? 1 : 0);
-        //return  AjaxResult.success();
+        AjaxResult ajaxResult = iApplyOnlineService.verifyCodeExist(applyOnline.getVerifyCode());
+        String code = ajaxResult.get("code").toString();
+        if ("200".equals(code)) {
+            if(iApplyOnlineService.ApplyOnlineExist(applyOnline.getIdcardCode(),applyOnline.getProductId())){
+                ajaxResult = AjaxResult.error("您已经提交过该产品的申请，客户经理会及时与您联系。");
+                return ajaxResult;
+            }
+            if (!iApplyOnlineService.save(applyOnline))
+                ajaxResult = AjaxResult.error("保存失败");
+        }
+        return ajaxResult;
     }
+
     /**
      * 查询在线申请清单列表
      */
     @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ApplyOnline applyOnline){
+    public TableDataInfo list(ApplyOnline applyOnline) {
         startPage();
         LambdaQueryWrapper<ApplyOnline> lqw = new LambdaQueryWrapper<ApplyOnline>();
-        if (applyOnline.getProductId() != null){
-            lqw.eq(ApplyOnline::getProductId ,applyOnline.getProductId());
+        if (applyOnline.getProductId() != null) {
+            lqw.eq(ApplyOnline::getProductId, applyOnline.getProductId());
         }
-        if (StringUtils.isNotBlank(applyOnline.getIdcardCode())){
-            lqw.eq(ApplyOnline::getIdcardCode ,applyOnline.getIdcardCode());
+        if (StringUtils.isNotBlank(applyOnline.getIdcardCode())) {
+            lqw.eq(ApplyOnline::getIdcardCode, applyOnline.getIdcardCode());
         }
-        if (StringUtils.isNotBlank(applyOnline.getLiaisonMan())){
-            lqw.eq(ApplyOnline::getLiaisonMan ,applyOnline.getLiaisonMan());
+        if (StringUtils.isNotBlank(applyOnline.getLiaisonMan())) {
+            lqw.eq(ApplyOnline::getLiaisonMan, applyOnline.getLiaisonMan());
         }
-        if (StringUtils.isNotBlank(applyOnline.getPhone())){
-            lqw.eq(ApplyOnline::getPhone ,applyOnline.getPhone());
+        if (StringUtils.isNotBlank(applyOnline.getPhone())) {
+            lqw.eq(ApplyOnline::getPhone, applyOnline.getPhone());
         }
-        if (StringUtils.isNotBlank(applyOnline.getAddress())){
-            lqw.eq(ApplyOnline::getAddress ,applyOnline.getAddress());
+        if (StringUtils.isNotBlank(applyOnline.getAddress())) {
+            lqw.eq(ApplyOnline::getAddress, applyOnline.getAddress());
         }
-        if (StringUtils.isNotBlank(applyOnline.getVerifyCode())){
-            lqw.eq(ApplyOnline::getVerifyCode ,applyOnline.getVerifyCode());
+        if (StringUtils.isNotBlank(applyOnline.getVerifyCode())) {
+            lqw.eq(ApplyOnline::getVerifyCode, applyOnline.getVerifyCode());
         }
-        if (StringUtils.isNotBlank(applyOnline.getAreaCode())){
-            lqw.eq(ApplyOnline::getAreaCode ,applyOnline.getAreaCode());
+        if (StringUtils.isNotBlank(applyOnline.getAreaCode())) {
+            lqw.eq(ApplyOnline::getAreaCode, applyOnline.getAreaCode());
         }
-        if (StringUtils.isNotBlank(applyOnline.getAreaCode2())){
-            lqw.eq(ApplyOnline::getAreaCode2 ,applyOnline.getAreaCode2());
+        if (StringUtils.isNotBlank(applyOnline.getAreaCode2())) {
+            lqw.eq(ApplyOnline::getAreaCode2, applyOnline.getAreaCode2());
         }
-        if (StringUtils.isNotBlank(applyOnline.getState())){
-            lqw.eq(ApplyOnline::getState ,applyOnline.getState());
+        if (StringUtils.isNotBlank(applyOnline.getState())) {
+            lqw.eq(ApplyOnline::getState, applyOnline.getState());
         }
-        if (StringUtils.isNotBlank(applyOnline.getMoney())){
-            lqw.eq(ApplyOnline::getMoney ,applyOnline.getMoney());
+        if (StringUtils.isNotBlank(applyOnline.getMoney())) {
+            lqw.eq(ApplyOnline::getMoney, applyOnline.getMoney());
         }
-        if (StringUtils.isNotBlank(applyOnline.getOrgCode())){
-            lqw.eq(ApplyOnline::getOrgCode ,applyOnline.getOrgCode());
+        if (StringUtils.isNotBlank(applyOnline.getOrgCode())) {
+            lqw.eq(ApplyOnline::getOrgCode, applyOnline.getOrgCode());
         }
-        if (StringUtils.isNotBlank(applyOnline.getStaffCode())){
-            lqw.eq(ApplyOnline::getStaffCode ,applyOnline.getStaffCode());
+        if (StringUtils.isNotBlank(applyOnline.getStaffCode())) {
+            lqw.eq(ApplyOnline::getStaffCode, applyOnline.getStaffCode());
         }
-        if (StringUtils.isNotBlank(applyOnline.getConfirmStaffCode())){
-            lqw.eq(ApplyOnline::getConfirmStaffCode ,applyOnline.getConfirmStaffCode());
+        if (StringUtils.isNotBlank(applyOnline.getConfirmStaffCode())) {
+            lqw.eq(ApplyOnline::getConfirmStaffCode, applyOnline.getConfirmStaffCode());
         }
-        if (applyOnline.getConfirmTime() != null){
-            lqw.eq(ApplyOnline::getConfirmTime ,applyOnline.getConfirmTime());
+        if (applyOnline.getConfirmTime() != null) {
+            lqw.eq(ApplyOnline::getConfirmTime, applyOnline.getConfirmTime());
         }
-        if (StringUtils.isNotBlank(applyOnline.getHandleStaffCode())){
-            lqw.eq(ApplyOnline::getHandleStaffCode ,applyOnline.getHandleStaffCode());
+        if (StringUtils.isNotBlank(applyOnline.getHandleStaffCode())) {
+            lqw.eq(ApplyOnline::getHandleStaffCode, applyOnline.getHandleStaffCode());
         }
-        if (applyOnline.getHandleTime() != null){
-            lqw.eq(ApplyOnline::getHandleTime ,applyOnline.getHandleTime());
+        if (applyOnline.getHandleTime() != null) {
+            lqw.eq(ApplyOnline::getHandleTime, applyOnline.getHandleTime());
         }
-        if (StringUtils.isNotBlank(applyOnline.getCloseStaffCode())){
-            lqw.eq(ApplyOnline::getCloseStaffCode ,applyOnline.getCloseStaffCode());
+        if (StringUtils.isNotBlank(applyOnline.getCloseStaffCode())) {
+            lqw.eq(ApplyOnline::getCloseStaffCode, applyOnline.getCloseStaffCode());
         }
-        if (StringUtils.isNotBlank(applyOnline.getCloseReason())){
-            lqw.eq(ApplyOnline::getCloseReason ,applyOnline.getCloseReason());
+        if (StringUtils.isNotBlank(applyOnline.getCloseReason())) {
+            lqw.eq(ApplyOnline::getCloseReason, applyOnline.getCloseReason());
         }
-        if (applyOnline.getCloseTime() != null){
-            lqw.eq(ApplyOnline::getCloseTime ,applyOnline.getCloseTime());
+        if (applyOnline.getCloseTime() != null) {
+            lqw.eq(ApplyOnline::getCloseTime, applyOnline.getCloseTime());
         }
         List<ApplyOnline> list = iApplyOnlineService.list(lqw);
         return getDataTable(list);
@@ -137,30 +146,30 @@ public class ApplyOnlineController extends BaseController {
     /**
      * 导出在线申请清单列表
      */
-    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:export')" )
-    @Log(title = "在线申请清单" , businessType = BusinessType.EXPORT)
-    @GetMapping("/export" )
+    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:export')")
+    @Log(title = "在线申请清单", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
     public AjaxResult export(ApplyOnline applyOnline) {
         LambdaQueryWrapper<ApplyOnline> lqw = new LambdaQueryWrapper<ApplyOnline>(applyOnline);
         List<ApplyOnline> list = iApplyOnlineService.list(lqw);
-        ExcelUtil<ApplyOnline> util = new ExcelUtil<ApplyOnline>(ApplyOnline. class);
-        return util.exportExcel(list, "ApplyOnline" );
+        ExcelUtil<ApplyOnline> util = new ExcelUtil<ApplyOnline>(ApplyOnline.class);
+        return util.exportExcel(list, "ApplyOnline");
     }
 
     /**
      * 获取在线申请清单详细信息
      */
-    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:query')" )
-    @GetMapping(value = "/{id}" )
-    public AjaxResult getInfo(@PathVariable("id" ) Long id) {
+    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(iApplyOnlineService.getById(id));
     }
 
     /**
      * 新增在线申请清单
      */
-    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:add')" )
-    @Log(title = "在线申请清单" , businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:add')")
+    @Log(title = "在线申请清单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ApplyOnline applyOnline) {
         return toAjax(iApplyOnlineService.save(applyOnline) ? 1 : 0);
@@ -169,8 +178,8 @@ public class ApplyOnlineController extends BaseController {
     /**
      * 修改在线申请清单
      */
-    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:edit')" )
-    @Log(title = "在线申请清单" , businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:edit')")
+    @Log(title = "在线申请清单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ApplyOnline applyOnline) {
         return toAjax(iApplyOnlineService.updateById(applyOnline) ? 1 : 0);
@@ -179,9 +188,9 @@ public class ApplyOnlineController extends BaseController {
     /**
      * 删除在线申请清单
      */
-    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:remove')" )
-    @Log(title = "在线申请清单" , businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}" )
+    @PreAuthorize("@ss.hasPermi('crm:ApplyOnline:remove')")
+    @Log(title = "在线申请清单", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(iApplyOnlineService.removeByIds(Arrays.asList(ids)) ? 1 : 0);
     }

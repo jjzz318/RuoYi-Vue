@@ -32,8 +32,8 @@
       <van-cell :title="productInfo.name" icon="card" />
       <van-cell :value="productInfo.content" />
     </van-cell-group>
-    <van-form @submit="onSubmit" :model="form" ref="form" class="panel_block3">
-       <van-field
+    <van-form :model="form" ref="form" class="panel_block3">
+      <van-field
         v-model="form.productId"
         name="productId"
         label="产品id"
@@ -58,8 +58,8 @@
       <van-field
         v-model="form.money"
         name="money"
-        label="期望额度"
-        placeholder="期望额度"
+        :label="lable1"
+        :placeholder="lable1"
         :rules="[{ required: true, message: '请填写期望额度' }]"
       />
       <van-field
@@ -96,7 +96,7 @@
       </van-field>
 
       <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit">提交</van-button>
+        <van-button round block type="info" native-type="submit" @click="onSubmit()">提交</van-button>
       </div>
     </van-form>
   </div>
@@ -130,7 +130,6 @@ export default {
   },
   created: function () {
     this.getProduct();
-    
   },
   data() {
     return {
@@ -141,6 +140,7 @@ export default {
       disabled: false,
       // 表单参数
       form: {},
+      lable1:'期望額度'
     };
   },
   mounted() {
@@ -161,26 +161,37 @@ export default {
     getProduct() {
       this.loading = true;
       var id = this.getQueryString("id");
-      this.form.product_id=id;
+
+      this.form.productId = id;
       apiGetProduct(id).then((response) => {
         this.productInfo = response.data;
+
+        if(this.productInfo.type=="1001" || this.productInfo.type=="1003"){
+          this.lable1="期望額度";
+        }
+        if(this.productInfo.type=="1002"){
+          this.lable1="存款金額";
+        }
         this.loading = false;
       });
     },
-    onSubmit(values) {
-      console.log(this.form)
+    onSubmit() {
+      console.log(this.form);
       apply(this.form)
         .then((res) => {
-          console.log(res.username);
+          if (res.code == 200) {
+            Notify({ type: "success", message: res.msg });
+          } else {
+            Notify({ type: "warning", message: res.msg });
+          }
         })
         .catch((error) => {
           console.log(error);
         });
-      console.log("submit", values);
     },
     onSendCode() {
       if (this.form.phone.length != 11) {
-        Notify("请输入正确的手机号码");
+        Notify({ type: "warning", message: "请输入正确的手机号码" });
         return;
       }
       this.codeTime = 60;
