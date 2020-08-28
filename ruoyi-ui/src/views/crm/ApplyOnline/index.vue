@@ -1,16 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="产品id" prop="productId">
-        <el-input
-          v-model="queryParams.productId"
-          placeholder="请输入产品id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="身份证号码" prop="idcardCode">
+
+      <el-form-item label="身份证" prop="idcardCode">
         <el-input
           v-model="queryParams.idcardCode"
           placeholder="请输入身份证号码"
@@ -37,59 +29,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="详细地址" prop="address">
-        <el-input
-          v-model="queryParams.address"
-          placeholder="请输入详细地址"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="手机验证码" prop="verifyCode">
-        <el-input
-          v-model="queryParams.verifyCode"
-          placeholder="请输入手机验证码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="地区编号1" prop="areaCode">
-        <el-input
-          v-model="queryParams.areaCode"
-          placeholder="请输入地区编号1"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="地区编号2" prop="areaCode2">
-        <el-input
-          v-model="queryParams.areaCode2"
-          placeholder="请输入地区编号2"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态，0处理，1已受理，2完成办理,3关闭" prop="state">
-        <el-input
-          v-model="queryParams.state"
-          placeholder="请输入状态，0处理，1已受理，2完成办理,3关闭"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="期望贷款额度" prop="money">
-        <el-input
-          v-model="queryParams.money"
-          placeholder="请输入期望贷款额度"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="状态" prop="state">
+        <el-select v-model="queryParams.state"  clearable size="small">
+          <el-option
+            v-for="dict in stateOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="归属机构" prop="orgCode">
         <el-input
@@ -100,7 +48,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="归属客户经理" prop="staffCode">
+      <el-form-item label="客户经理" prop="staffCode">
         <el-input
           v-model="queryParams.staffCode"
           placeholder="请输入归属客户经理"
@@ -109,66 +57,8 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="确认人" prop="confirmStaffCode">
-        <el-input
-          v-model="queryParams.confirmStaffCode"
-          placeholder="请输入确认人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="确认时间" prop="confirmTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.confirmTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择确认时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="办理人" prop="handleStaffCode">
-        <el-input
-          v-model="queryParams.handleStaffCode"
-          placeholder="请输入办理人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="办理时间" prop="handleTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.handleTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择办理时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="关闭人" prop="closeStaffCode">
-        <el-input
-          v-model="queryParams.closeStaffCode"
-          placeholder="请输入关闭人"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关闭理由" prop="closeReason">
-        <el-input
-          v-model="queryParams.closeReason"
-          placeholder="请输入关闭理由"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关闭时间" prop="closeTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.closeTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择关闭时间">
-        </el-date-picker>
-      </el-form-item>
+    
+     
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -227,7 +117,7 @@
       <el-table-column label="手机验证码" align="center" prop="verifyCode" />
       <el-table-column label="地区编号1" align="center" prop="areaCode" />
       <el-table-column label="地区编号2" align="center" prop="areaCode2" />
-      <el-table-column label="状态，0处理，1已受理，2完成办理,3关闭" align="center" prop="state" />
+      <el-table-column label="状态" align="center" prop="state" :formatter="stateFormat" />
       <el-table-column label="期望贷款额度" align="center" prop="money" />
       <el-table-column label="归属机构" align="center" prop="orgCode" />
       <el-table-column label="归属客户经理" align="center" prop="staffCode" />
@@ -305,8 +195,15 @@
         <el-form-item label="地区编号2" prop="areaCode2">
           <el-input v-model="form.areaCode2" placeholder="请输入地区编号2" />
         </el-form-item>
-        <el-form-item label="状态，0处理，1已受理，2完成办理,3关闭" prop="state">
-          <el-input v-model="form.state" placeholder="请输入状态，0处理，1已受理，2完成办理,3关闭" />
+        <el-form-item label="状态，0处理，1已受理，2完成办理,3关闭">
+          <el-select v-model="form.state" placeholder="请选择状态，0处理，1已受理，2完成办理,3关闭">
+            <el-option
+              v-for="dict in stateOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="期望贷款额度" prop="money">
           <el-input v-model="form.money" placeholder="请输入期望贷款额度" />
@@ -388,6 +285,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 状态，0处理，1已受理，2完成办理,3关闭字典
+      stateOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -424,6 +323,9 @@ export default {
   },
   created() {
     this.getList();
+    this.getDicts("apply_online_sate").then(response => {
+      this.stateOptions = response.data;
+    });
   },
   methods: {
     /** 查询在线申请清单列表 */
@@ -434,6 +336,10 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 状态，0处理，1已受理，2完成办理,3关闭字典翻译
+    stateFormat(row, column) {
+      return this.selectDictLabel(this.stateOptions, row.state);
     },
     // 取消按钮
     cancel() {
