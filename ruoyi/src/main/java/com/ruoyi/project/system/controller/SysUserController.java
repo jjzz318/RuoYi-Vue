@@ -54,6 +54,19 @@ public class SysUserController extends BaseController
     private TokenService tokenService;
 
     /**
+     * 根据用户编号获取详细信息
+     */
+    @GetMapping(value = { "/api/getInfo/{staffCode}"})
+    public AjaxResult apiGetInfo(@PathVariable("staffCode" ) String staffCode)
+    {
+        AjaxResult ajax = AjaxResult.success();
+        if (StringUtils.isNotNull(staffCode))
+        {
+            ajax.put(AjaxResult.DATA_TAG, userService.selectUserByUserName(staffCode));
+        }
+        return ajax;
+    }
+    /**
      * 获取用户列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")

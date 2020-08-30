@@ -2,22 +2,22 @@
   <div id="App">
     <div class="panel_block">
       <div class="Photo">
-        <img src="@/assets/171579081443_.pic_hd.jpg" class="Photo" />
+          <img :src="avatar" class="Photo" />
       </div>
       <div class="introduce">
         <div class="title">
           <img src="@/assets/logo.png" class="logo" />
         </div>
         <div class="title2">
-          <b>农商小陈</b>
-          <span style="margin-left: 15px;font-weight:bold;">客户经理</span>
+          <b>{{userInfo.nickName}}</b>
+          <span style="margin-left: 15px;font-weight:bold;">{{deptName}}</span>
         </div>
-        <div class="title3">宁溪支行</div>
+        <div class="title3">{{userInfo.postName}}</div>
         <div class="title2">
           <div style="float:left;">
             <van-icon name="phone" size="23" color="#1989fa" />
           </div>
-          <div style="line-height:25px;margin-left: 35px;">15867009090</div>
+          <div style="line-height:25px;margin-left: 35px;" @click="callPhone">{{userInfo.phonenumber}}</div>
         </div>
         <div class="title2">
           <div style="float:left;">
@@ -27,9 +27,15 @@
         </div>
       </div>
     </div>
-    <div class="panel_block2">有多年金融行业经验，具有丰富的理财业务知识，熟知各项理财产品，能根据市场变化，和客户个人情况，为其提供最合适的金融产品。</div>
+    <div class="panel_block2">{{userInfo.remark}}</div>
     <van-cell-group class="panel_block3" style="background-color: #c7d9ff;">
-      <van-cell title="进入我的微店" icon="card" is-link style="background-color: #c7d9ff;" url="/crm/shop/FinanceShop"/>
+      <van-cell
+        title="进入我的微店"
+        icon="card"
+        is-link
+        style="background-color: #c7d9ff;"
+        :url="'/crm/shop/FinanceShop?staffCode='+staffCode"
+      />
     </van-cell-group>
     <div class="panel_block4">
       <span style="font-size: 30px;font-weight: bold;">23</span>
@@ -64,7 +70,8 @@ import { Col, Row } from "vant";
 import { Icon } from "vant";
 import { Cell, CellGroup } from "vant";
 import { apiListProduct } from "@/api/crm/product";
-
+import { getUserInfo } from "@/api/system/user";
+import { getQueryString } from "@/utils/tool.js";
 export default {
   name: "home",
   components: {
@@ -81,12 +88,28 @@ export default {
       loanProductList: [],
       depProductList: [],
       otherProductList: [],
+      deptName: "",
+      userInfo: [],
+      staffCode: "",
+      avatar: "",
     };
   },
   created: function () {
     this.getList();
+    this.getUserInfo();
   },
   methods: {
+    callPhone(){
+      window.location.href = 'tel://'+userInfo.phonenumber
+    },
+    getUserInfo() {
+      this.staffCode = getQueryString("staffCode");
+      getUserInfo(this.staffCode).then((response) => {
+        this.userInfo = response.data;
+        this.avatar = process.env.VUE_APP_BASE_API + "/" + this.userInfo.avatar;
+        this.deptName = this.userInfo.dept.deptName;
+      });
+    },
     /** 查询产品管理列表 */
     getList() {
       this.loading = true;

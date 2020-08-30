@@ -208,7 +208,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" :disable-branch-nodes="true" :show-count="true" placeholder="请选择归属部门" />
+              <treeselect v-model="form.deptId" :options="deptOptions" :disable-branch-nodes="false" :show-count="true" placeholder="请选择归属部门" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -424,14 +424,14 @@ export default {
         password: [
           { required: true, message: "用户密码不能为空", trigger: "blur" }
         ],
-        email: [
-          { required: true, message: "邮箱地址不能为空", trigger: "blur" },
-          {
-            type: "email",
-            message: "'请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
-          }
-        ],
+        // email: [
+        //   { required: true, message: "邮箱地址不能为空", trigger: "blur" },
+        //   {
+        //     type: "email",
+        //     message: "'请输入正确的邮箱地址",
+        //     trigger: ["blur", "change"]
+        //   }
+        // ],
         phonenumber: [
           { required: true, message: "手机号码不能为空", trigger: "blur" },
           {

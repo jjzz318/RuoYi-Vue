@@ -1,5 +1,5 @@
 module.exports = {
-  title: '综合平台',
+  title: '金融微店',
 
   /**
    * 是否系统布局配置

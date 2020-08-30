@@ -115,7 +115,7 @@
         <if test="location != null and location != ''">#{location},</if>
         <if test="address != null and address != ''">#{address},</if>
         <if test="type != null and type != ''">#{type},</if>
-        <if test="orgCode != null and orgCode != ''">#{org_code},</if>
+        <if test="orgCode != null and orgCode != ''">#{orgCode},</if>
         sysdate()
         )
     </insert>

@@ -1,36 +1,8 @@
 <template>
   <div id="App">
-    <div class="panel_block">
-      <div class="Photo">
-        <img :src="avatar" class="Photo" />
-      </div>
-      <div class="introduce">
-        <div class="title">
-          <img src="@/assets/logo.png" class="logo" />
-        </div>
-        <div class="title2">
-          <b>{{userInfo.nickName}}</b>
-          <span style="margin-left: 15px;font-weight:bold;">{{deptName}}</span>
-        </div>
-        <div class="title3">{{userInfo.postName}}</div>
-        <div class="title2">
-          <div style="float:left;">
-            <van-icon name="phone" size="23" color="#1989fa" />
-          </div>
-          <div style="line-height:25px;margin-left: 35px;" @click="callPhone">{{userInfo.phonenumber}}</div>
-        </div>
-        <div class="title2">
-          <div style="float:left;">
-            <van-icon name="enlarge" size="23" color="#1989fa" />
-          </div>
-          <div style="line-height:25px;margin-left: 35px;">点击查看二维码</div>
-        </div>
-      </div>
-    </div>
-    <div class="panel_block2">{{userInfo.remark}}</div>
     <van-cell-group class="panel_block3">
-      <van-cell :title="productInfo.name" icon="card" />
-      <van-cell :value="productInfo.content" />
+      <van-cell title="公积金贷" icon="card" />
+      <van-cell value="有公积金都可以申请" />
     </van-cell-group>
     <van-form :model="form" ref="form" class="panel_block3">
       <van-field
@@ -42,63 +14,65 @@
         v-show="false"
       />
       <van-field
-        v-model="form.staffCode"
-        name="staffCode"
-        label="柜员号"
-        placeholder="柜员号"
-        :rules="[{ required: true, message: '柜员号' }]"
-        v-show="false"
-      />
-      <van-field
-        v-model="form.idcardCode"
+        v-model="applyInfo.idcardCode"
         name="idcardCode"
         label="身份证"
         placeholder="身份证"
         :rules="[{ required: true, message: '请填写正确的身份证号码' }]"
       />
       <van-field
-        v-model="form.liaisonMan"
+        v-model="applyInfo.liaisonMan"
         name="liaisonMan"
         label="申请人"
         placeholder="申请人"
         :rules="[{ required: true, message: '请填写申请人姓名' }]"
       />
-      <van-field v-model="form.money" name="money" :label="lable1" :placeholder="lable1" />
+      <van-field v-model="applyInfo.money" name="money" :label="lable1" :placeholder="lable1" />
       <van-field
-        v-model="form.address"
+        v-model="applyInfo.address"
         name="address"
         label="详细地址"
         placeholder="详细地址"
         :rules="[{ required: true, message: '请填写详细地址' }]"
       />
       <van-field
-        v-model="form.phone"
+        v-model="applyInfo.phone"
         name="phone"
         label="手机号"
         placeholder="手机号"
         :rules="[{ required: true, message: '请填写手机号码' }]"
       />
       <van-field
-        v-model="form.verifyCode"
-        name="verifyCode"
-        label="验证码"
-        placeholder="验证码"
-        :rules="[{ required: true, message: '验证码' }]"
-      >
-        <van-button
-          round
-          block
-          slot="button"
-          size="small"
-          type="primary"
-          native-type="button"
-          :disabled="disabled"
-          @click="onSendCode()"
-        >{{btnTxt}}</van-button>
+        v-model="applyInfo.staffCode"
+        name="staffCode"
+        label="客户经理"
+        placeholder="客户经理"
+        :rules="[{ required: true, message: '柜员号' }]"
+      />
+      <van-field v-model="applyInfo.createTime" name="createTime" label="申请时间" placeholder="申请时间" />
+      <van-field name="radio" label="状态">
+        <template #input>
+          <van-radio-group v-model="radio" direction="horizontal">
+            <van-radio name="1">未处理</van-radio>
+            <van-radio name="2">已受理</van-radio>
+            <van-radio name="3">完成办理</van-radio>
+            <van-radio name="4">关闭</van-radio>
+          </van-radio-group>
+        </template>
       </van-field>
-
+      <van-field name="checkboxGroup" label="联系后反馈">
+        <template #input>
+          <van-checkbox-group v-model="checkboxGroup" direction="horizontal">
+            <van-checkbox name="1" shape="square">真实需求</van-checkbox>
+            <van-checkbox name="2" shape="square">随意填写</van-checkbox>
+            <van-checkbox name="2" shape="square">不符合标准</van-checkbox>
+            <van-checkbox name="2" shape="square">电话沟通</van-checkbox>
+          </van-checkbox-group>
+        </template>
+      </van-field>
+      <van-field name="bz" label="备注" placeholder="备注" />
       <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit" @click="onSubmit()">提交</van-button>
+        <van-button round block type="info" native-type="submit" >提交</van-button>
       </div>
     </van-form>
   </div>
@@ -111,6 +85,8 @@ import { Col, Row } from "vant";
 import { Icon } from "vant";
 import { Form } from "vant";
 import { Field } from "vant";
+import { RadioGroup, Radio, Ceckbox } from "vant";
+import { Checkbox, CheckboxGroup } from "vant";
 import { Cell, CellGroup } from "vant";
 import { apply } from "@/api/crm/LoanApplication";
 import { Notify } from "vant";
@@ -118,8 +94,9 @@ import { sendVerifyCode } from "@/api/crm/shop/msg.js";
 import { apiGetProduct } from "@/api/crm/product";
 import { getQueryString } from "@/utils/tool.js";
 import { getUserInfo } from "@/api/system/user";
+import { apiGetApplyOnline } from "@/api/crm/ApplyOnline";
 export default {
-  name: "LoanApplication",
+  name: "ApplyInfo",
   components: {
     [Button.name]: Button,
     [NavBar.name]: NavBar,
@@ -130,13 +107,17 @@ export default {
     [Field.name]: Field,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
+    [RadioGroup.name]: RadioGroup,
+    [Radio.name]: Radio,
+    [Checkbox.name]: Checkbox,
+    [CheckboxGroup.name]: CheckboxGroup,
     [Notify.Component.name]: Notify,
   },
   created: function () {
-    this.getProduct();
+    //this.getProduct();
     var staffCode = getQueryString("staffCode");
     this.form.staffCode = staffCode;
-    this.getUserInfo();
+    this.apiGetApplyOnline();
   },
   data() {
     return {
@@ -152,6 +133,8 @@ export default {
       staffCode: "",
       avatar: "",
       deptName: "",
+      applyInfo: [],
+      radio: "1",
     };
   },
   mounted() {
@@ -163,8 +146,14 @@ export default {
     document.querySelector("body").removeAttribute("style");
   },
   methods: {
-    callPhone(){
-      window.location.href = 'tel://'+userInfo.phonenumber
+    callPhone() {
+      window.location.href = "tel://" + userInfo.phonenumber;
+    },
+    apiGetApplyOnline() {
+      var id = getQueryString("id");
+      apiGetApplyOnline(id).then((response) => {
+        this.applyInfo = response.data;
+      });
     },
     getUserInfo() {
       this.staffCode = getQueryString("staffCode");

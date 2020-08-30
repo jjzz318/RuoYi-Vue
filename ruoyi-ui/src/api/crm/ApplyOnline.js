@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+// 查询在线申请清单详细
+export function apiGetApplyOnline(id) {
+  return request({
+    url: '/crm/ApplyOnline/api/' + id,
+    method: 'get'
+  })
+}
 // 查询在线申请清单列表
 export function listApplyOnline(query) {
   return request({

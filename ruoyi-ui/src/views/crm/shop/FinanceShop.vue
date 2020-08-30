@@ -2,22 +2,22 @@
   <div id="App">
     <div class="panel_block">
       <div class="Photo">
-        <img src="@/assets/171579081443_.pic_hd.jpg" class="Photo" />
+          <img :src="avatar" class="Photo" />
       </div>
       <div class="introduce">
         <div class="title">
           <img src="@/assets/logo.png" class="logo" />
         </div>
         <div class="title2">
-          <b>农商小陈</b>
-          <span style="margin-left: 15px;font-weight:bold;">客户经理</span>
+          <b>{{userInfo.nickName}}</b>
+          <span style="margin-left: 15px;font-weight:bold;">{{userInfo.dept.deptName}}</span>
         </div>
-        <div class="title3">宁溪支行</div>
+        <div class="title3">{{userInfo.postName}}</div>
         <div class="title2">
           <div style="float:left;">
             <van-icon name="phone" size="23" color="#1989fa" />
           </div>
-          <div style="line-height:25px;margin-left: 35px;">15867009090</div>
+          <div style="line-height:25px;margin-left: 35px;" @click="callPhone">{{userInfo.phonenumber}}</div>
         </div>
         <div class="title2">
           <div style="float:left;">
@@ -27,20 +27,21 @@
         </div>
       </div>
     </div>
-    <div class="panel_block2">有多年金融行业经验，具有丰富的理财业务知识，熟知各项理财产品，能根据市场变化，和客户个人情况，为其提供最合适的金融产品。</div>
+        <div class="panel_block2">{{userInfo.remark}}</div>
     <van-cell-group class="panel_block3">
       <van-cell title="贷款产品" icon="card" is-link />
-      <van-cell    v-for="(item, index) in loanProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/shop/LoanApplication?id='+item.id" />
+      <van-cell    v-for="(item, index) in loanProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/shop/LoanApplication?staffCode='+staffCode+'&id='+item.id" />
     </van-cell-group>
 
     <van-cell-group class="panel_block3">
       <van-cell title="存款产品" icon="card" is-link />
-      <van-cell    v-for="(item, index) in depProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/shop/LoanApplication?id='+item.id" />
+      <van-cell    v-for="(item, index) in depProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/shop/LoanApplication?staffCode='+staffCode+'&id='+item.id" />
     </van-cell-group>
 
     <van-cell-group class="panel_block3">
-      <van-cell title="其他产品" icon="card" is-link />
-      <van-cell    v-for="(item, index) in otherProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/shop/crm/LoanApplication?id='+item.id" />
+      <van-cell title="信用卡" icon="card" is-link />
+      <van-cell title="五折信用卡"  size="large" label="1.满足消费条件，即享1元洗车、10元看电影、10元洗发、5折面包券；2.刷卡享受椒黄路仙150余家商户5折美食" url="https://cc.zj96596.com/bankcoas/mb/?from=singlemessage&isappinstalled=0"/>
+      <van-cell title="腾讯联名卡" size="large" label="1.喜欢的权益自己选，加享150元3项自选权益；2.满足消费条件，即享1元洗车、10元看电影、10元洗发、5折面包券；3.刷卡享受椒黄路仙150余家商户5折美食" url="https://wepluscard.qq.com/web/huidu.html?platform=wx&offlineId=2020080421003901303621&channelID=46076&state=&code=0916FtFa1oy2xz0lLrFa1DLuqd26FtFm#/apply/main?platform=wx&channelID=46076"/>
     </van-cell-group>
   </div>
 </template>
@@ -52,7 +53,8 @@ import { Col, Row } from "vant";
 import { Icon } from "vant";
 import { Cell, CellGroup } from "vant";
 import { apiListProduct } from "@/api/crm/product";
-
+import { getUserInfo } from "@/api/system/user";
+import { getQueryString } from "@/utils/tool.js";
 export default {
   name: "FinanceShop",
   components: {
@@ -69,12 +71,27 @@ export default {
       loanProductList: [],
       depProductList: [],
       otherProductList: [],
+      userInfo:[],
+      staffCode:'',
+      avatar:''
     }
   },
   created: function () {
     this.getList();
+    this.getUserInfo();
   },
   methods: {
+    callPhone(){
+      window.location.href = 'tel://'+userInfo.phonenumber
+    },
+    getUserInfo(){
+        this.staffCode=getQueryString("staffCode");
+        getUserInfo(this.staffCode).then((response) => {
+            this.userInfo=response.data;
+           this.avatar = process.env.VUE_APP_BASE_API + "/" + this.userInfo.avatar;
+           this.deptName = this.userInfo.dept.deptName;
+        });
+    },
     /** 查询产品管理列表 */
     getList() {
       this.loading = true;

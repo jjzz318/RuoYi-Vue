@@ -1,6 +1,13 @@
 import request from '@/utils/request'
 import { praseStrEmpty } from "@/utils/ruoyi";
 
+// 查询用户详细-手机端
+export function getUserInfo(staffCode) {
+  return request({
+    url: '/system/user/api/getInfo/' + praseStrEmpty(staffCode),
+    method: 'get'
+  })
+}
 // 查询用户列表
 export function listUser(query) {
   return request({

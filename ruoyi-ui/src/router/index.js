@@ -53,6 +53,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/crm/shop/ApplyInfo',
+    component: (resolve) => require(['@/views/crm/shop/ApplyInfo'], resolve),
+    hidden: true
+  },
+  {
     path: '/login',
     component: (resolve) => require(['@/views/login'], resolve),
     hidden: true

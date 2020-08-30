@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import com.hyrcb.hydp.common.utils.RandomUtil;
 import com.hyrcb.hydp.common.utils.SMSUtil;
+import com.hyrcb.hydp.common.utils.WeChat.WorkWxUtil;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.ruoyi.common.utils.StringUtils;
@@ -68,12 +69,24 @@ public class ApplyOnlineController extends BaseController {
                 ajaxResult = AjaxResult.error("您已经提交过该产品的申请，客户经理会及时与您联系。");
                 return ajaxResult;
             }
-            if (!iApplyOnlineService.save(applyOnline))
+
+            if (iApplyOnlineService.save(applyOnline)){
+                WorkWxUtil wxUtil=new WorkWxUtil();
+                wxUtil.sendMsg("ChenChong",applyOnline.getLiaisonMan(),applyOnline.getId().toString());
+            }else{
                 ajaxResult = AjaxResult.error("保存失败");
+            }
+
         }
         return ajaxResult;
     }
-
+    /**
+     * 获取在线申请清单详细信息
+     */
+    @GetMapping(value = "api/{id}")
+    public AjaxResult apiGetInfo(@PathVariable("id") Long id) {
+        return AjaxResult.success(iApplyOnlineService.getById(id));
+    }
     /**
      * 查询在线申请清单列表
      */
