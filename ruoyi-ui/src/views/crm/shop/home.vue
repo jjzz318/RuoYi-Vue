@@ -2,7 +2,7 @@
   <div id="App">
     <div class="panel_block">
       <div class="Photo">
-          <img :src="avatar" class="Photo" />
+        <img :src="avatar" class="Photo" />
       </div>
       <div class="introduce">
         <div class="title">
@@ -17,7 +17,10 @@
           <div style="float:left;">
             <van-icon name="phone" size="23" color="#1989fa" />
           </div>
-          <div style="line-height:25px;margin-left: 35px;" @click="callPhone">{{userInfo.phonenumber}}</div>
+          <div
+            style="line-height:25px;margin-left: 35px;"
+            @click="callPhone"
+          >{{userInfo.phonenumber}}</div>
         </div>
         <div class="title2">
           <div style="float:left;">
@@ -42,7 +45,12 @@
       <div>2020年8月</div>
     </div>
     <van-cell-group class="panel_block3">
-      <van-cell title="头条" icon="card" is-link />
+      <van-cell
+        title="头条"
+        icon="card"
+        is-link
+        @click="shard('http://cc1212.natappvip.cc/crm/shop/home?staffCode=9622554')"
+      />
       <van-cell
         value="昨日，在央视新闻相对论节目中，董明珠回应“如果再跟雷军打赌，赌什么？”：格力在空调领域拥有核心技术，现在是走在领先地位。格力要在保持主业不变的情况下，让中国的装备在世界上叫得响！请雷军提出自己行业的目标。"
       />
@@ -72,6 +80,7 @@ import { Cell, CellGroup } from "vant";
 import { apiListProduct } from "@/api/crm/product";
 import { getUserInfo } from "@/api/system/user";
 import { getQueryString } from "@/utils/tool.js";
+import wx from "weixin-js-sdk";
 export default {
   name: "home",
   components: {
@@ -99,8 +108,8 @@ export default {
     this.getUserInfo();
   },
   methods: {
-    callPhone(){
-      window.location.href = 'tel://'+userInfo.phonenumber
+    callPhone() {
+      window.location.href = "tel://" + userInfo.phonenumber;
     },
     getUserInfo() {
       this.staffCode = getQueryString("staffCode");
@@ -127,6 +136,39 @@ export default {
         this.otherProductList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    shard(url) {
+      console.log(url);
+      wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: "wx002f85d12393d609", // 必填，公众号的唯一标识
+        timestamp: "1598948008", // 必填，生成签名的时间戳
+        nonceStr: "Wm3WZYTPz0wzccnW", // 必填，生成签名的随机串
+        signature: "8c64b9dd6f564412fc88a6f2e50d219d3e371dd9", // 必填，签名，见附录1
+        jsApiList: ["updateAppMessageShareData", "updateTimelineShareData","onMenuShareTimeline"], // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+      });
+      wx.ready(function () {
+        wx.updateAppMessageShareData({
+          title: "分享测试", // 分享标题
+          desc: "分享内容测试", // 分享描述
+          link: "http://cc1212.natappvip.cc/crm/shop/home?staffCode=9622554", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl:
+            "http://cc1212.natappvip.cc/dev-api//profile/avatar/2020/08/31/4bd8a42f755c413c8ecbe0843015268a.jpeg", // 分享图标
+          success: function () {
+      
+          },
+        });
+        wx.updateTimelineShareData({
+          title: "分享测试", // 分享标题
+          link: "http://cc1212.natappvip.cc/crm/shop/home?staffCode=9622554", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl:
+            "http://cc1212.natappvip.cc/dev-api//profile/avatar/2020/08/31/4bd8a42f755c413c8ecbe0843015268a.jpeg", // 分享图标
+          success: function () {
+            
+          },
+        });
+
       });
     },
   },

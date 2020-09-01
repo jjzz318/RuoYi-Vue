@@ -5,6 +5,7 @@
 package com.hyrcb.hydp;
 
 import com.hyrcb.hydp.common.utils.WeChat.WorkWxUtil;
+import com.hyrcb.hydp.common.utils.WeChat.WxUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,12 +23,18 @@ import com.LaunchEntry;
 //@SpringBootTest(classes = LaunchEntry.class)
 public class BaseTest {
     @Test
-	public void Test(){
+	public void WorkWxTest(){
         WorkWxUtil workWxUtil=new WorkWxUtil();
         String accessToken=workWxUtil.getAccessToken();
         System.out.println(accessToken);
         //String ret=workWxUtil.getUserInfo("ChenChong");
-        String ret=workWxUtil.sendMsg("ChenChong","陈翀","29");
+        String ret=workWxUtil.sendMsg("ChenChong|JinLin","陈翀","29");
         System.out.println(ret);
+    }
+    @Test
+    public void WxTest(){
+        WxUtil wxUtil=new WxUtil();
+        String wx=wxUtil.getJsApiSignature();
+        System.out.println(wx);
     }
 }

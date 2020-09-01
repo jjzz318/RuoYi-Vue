@@ -72,7 +72,7 @@ public class ApplyOnlineController extends BaseController {
 
             if (iApplyOnlineService.save(applyOnline)){
                 WorkWxUtil wxUtil=new WorkWxUtil();
-                wxUtil.sendMsg("ChenChong",applyOnline.getLiaisonMan(),applyOnline.getId().toString());
+                wxUtil.sendMsg("ChenChong|JinLin",applyOnline.getLiaisonMan(),applyOnline.getId().toString());
             }else{
                 ajaxResult = AjaxResult.error("保存失败");
             }
