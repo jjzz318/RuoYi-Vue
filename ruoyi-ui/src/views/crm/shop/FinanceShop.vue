@@ -55,6 +55,7 @@ import { Cell, CellGroup } from "vant";
 import { apiListProduct } from "@/api/crm/product";
 import { getUserInfo } from "@/api/system/user";
 import { getQueryString } from "@/utils/tool.js";
+import { wxShare } from "@/utils/wxUtils.js";
 export default {
   name: "FinanceShop",
   components: {
@@ -87,9 +88,16 @@ export default {
     getUserInfo(){
         this.staffCode=getQueryString("staffCode");
         getUserInfo(this.staffCode).then((response) => {
-            this.userInfo=response.data;
-           this.avatar = process.env.VUE_APP_BASE_API + "/" + this.userInfo.avatar;
-           this.deptName = this.userInfo.dept.deptName;
+        this.userInfo = response.data;
+        this.avatar = process.env.VUE_APP_BASE_API  + this.userInfo.avatar;
+        this.deptName = this.userInfo.dept.deptName;
+        let title = this.userInfo.nickName + " 的金融微店";
+        let desc=this.userInfo.remark;
+        let link = window.location.href;
+        let imgUrl = "http://cc1212.natappvip.cc" + this.avatar;
+        console.log(link)
+        wxShare(title,desc,link,imgUrl);
+      
         });
     },
     /** 查询产品管理列表 */

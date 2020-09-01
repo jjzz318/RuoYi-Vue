@@ -38,6 +38,11 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/crm/shop/staffList',
+    component: (resolve) => require(['@/views/crm/shop/StaffList'], resolve),
+    hidden: true
+  },
+  {
     path: '/crm/shop/home',
     component: (resolve) => require(['@/views/crm/shop/home'], resolve),
     hidden: true

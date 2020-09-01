@@ -8,6 +8,13 @@ export function getUserInfo(staffCode) {
     method: 'get'
   })
 }
+// 查询用户列表-手机端
+export function getListUser() {
+  return request({
+    url: '/system/user/api/getList',
+    method: 'get'
+  })
+}
 // 查询用户列表
 export function listUser(query) {
   return request({

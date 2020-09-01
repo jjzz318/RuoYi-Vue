@@ -65,21 +65,22 @@ public class ApplyOnlineController extends BaseController {
         AjaxResult ajaxResult = iApplyOnlineService.verifyCodeExist(applyOnline.getVerifyCode());
         String code = ajaxResult.get("code").toString();
         if ("200".equals(code)) {
-            if(iApplyOnlineService.ApplyOnlineExist(applyOnline.getIdcardCode(),applyOnline.getProductId())){
+            if (iApplyOnlineService.ApplyOnlineExist(applyOnline.getIdcardCode(), applyOnline.getProductId())) {
                 ajaxResult = AjaxResult.error("您已经提交过该产品的申请，客户经理会及时与您联系。");
                 return ajaxResult;
             }
 
-            if (iApplyOnlineService.save(applyOnline)){
-                WorkWxUtil wxUtil=new WorkWxUtil();
-                wxUtil.sendMsg("ChenChong|JinLin",applyOnline.getLiaisonMan(),applyOnline.getId().toString());
-            }else{
+            if (iApplyOnlineService.save(applyOnline)) {
+                WorkWxUtil wxUtil = new WorkWxUtil();
+                wxUtil.sendMsg("ChenChong|JinLin", applyOnline.getLiaisonMan(), applyOnline.getId().toString());
+            } else {
                 ajaxResult = AjaxResult.error("保存失败");
             }
 
         }
         return ajaxResult;
     }
+
     /**
      * 获取在线申请清单详细信息
      */
@@ -87,6 +88,7 @@ public class ApplyOnlineController extends BaseController {
     public AjaxResult apiGetInfo(@PathVariable("id") Long id) {
         return AjaxResult.success(iApplyOnlineService.getById(id));
     }
+
     /**
      * 查询在线申请清单列表
      */

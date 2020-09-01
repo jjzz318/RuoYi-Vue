@@ -2,6 +2,9 @@ package com.ruoyi.project.system.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -65,6 +68,15 @@ public class SysUserController extends BaseController
             ajax.put(AjaxResult.DATA_TAG, userService.selectUserByUserName(staffCode));
         }
         return ajax;
+    }
+    /**
+     * 获取用户列表
+     */
+    @GetMapping("/api/getList")
+    public AjaxResult getList()
+    {
+        List<Record> recordList= Db.find("SELECT * from sys_user");
+        return AjaxResult.success(recordList);
     }
     /**
      * 获取用户列表

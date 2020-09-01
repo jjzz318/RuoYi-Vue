@@ -12,6 +12,7 @@ public class WxUtil {
     private String appid = "wx002f85d12393d609";
     //secret
     private String secret = "6df62a1b691b32995c0549fc2c6dc4aa";
+    private String timestamp="";
     //腾讯微信服务器
     String baseUrl = "https://api.weixin.qq.com/cgi-bin/";
     //鉴权服务器地址
@@ -48,6 +49,14 @@ public class WxUtil {
         accessToken = this.getAccessToken();
         wxMenu = new WxMenu(accessToken);
         wxUser = new WxUser(appid, secret);
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     /**
@@ -106,12 +115,13 @@ public class WxUtil {
      *
      * @return
      */
-    public String getJsApiSignature() {
+    public String getJsApiSignature(String url) {
+        this.timestamp=this.create_timestamp();
         Map<String, String> params = new HashMap<String, String>();
         params.put("noncestr", "Wm3WZYTPz0wzccnW");
         params.put("jsapi_ticket", this.getJsApiTicket());
-        params.put("timestamp", this.create_timestamp());
-        params.put("url", "http://cc1212.natappvip.cc/crm/shop/home?staffCode=9622554");
+        params.put("timestamp", this.timestamp);
+        params.put("url", url);
         String sign = FormatUtil.packageSign( params,false );
         System.out.println(sign);
         sign= SHA1Util.encode(sign);

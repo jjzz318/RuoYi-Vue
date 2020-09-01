@@ -34,7 +34,7 @@ public class BaseTest {
     @Test
     public void WxTest(){
         WxUtil wxUtil=new WxUtil();
-        String wx=wxUtil.getJsApiSignature();
+        String wx=wxUtil.getJsApiSignature("");
         System.out.println(wx);
     }
 }

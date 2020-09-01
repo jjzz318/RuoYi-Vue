@@ -98,6 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         ,"/system/user/api/**"
                         ,"/crm/ApplyOnline/applyLoan"
                         ,"/crm/ApplyOnline/api/**"
+                        ,"/wx/**"
                 ).anonymous()
                 .antMatchers(
                         HttpMethod.GET,
