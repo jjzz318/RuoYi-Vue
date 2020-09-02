@@ -24,13 +24,25 @@ public class JFinalActiveRecord extends AbstractTask{
 	}
 
 	public void execute() {
+		this.masterDb();
+		this.oldDb();
+	}
+	public void masterDb(){
 		DbProperties prop = BeanFactory.getBean(DbProperties.class);
-		DruidPlugin druidPlugin = new DruidPlugin(prop.getUrl(), prop.getUsername(), prop.getPassword(),prop.getDriverClassName()); 	
+		DruidPlugin druidPlugin = new DruidPlugin(prop.getUrl(), prop.getUsername(), prop.getPassword(),prop.getDriverClassName());
 		druidPlugin.start();
 		ActiveRecordPlugin arp = new ActiveRecordPlugin(druidPlugin);
 		arp.setShowSql(true);
 		arp.setDialect(new AnsiSqlDialect());
 		arp.start();
-		
+	}
+	public void oldDb(){
+		DbPropertiesOld prop = BeanFactory.getBean(DbPropertiesOld.class);
+		DruidPlugin druidPlugin = new DruidPlugin(prop.getUrl(), prop.getUsername(), prop.getPassword(),prop.getDriverClassName());
+		druidPlugin.start();
+		ActiveRecordPlugin arp = new ActiveRecordPlugin("oldDb",druidPlugin);
+		arp.setShowSql(true);
+		arp.setDialect(new AnsiSqlDialect());
+		arp.start();
 	}
 }

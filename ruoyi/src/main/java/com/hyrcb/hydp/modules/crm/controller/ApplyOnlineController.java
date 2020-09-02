@@ -73,6 +73,23 @@ public class ApplyOnlineController extends BaseController {
             if (iApplyOnlineService.save(applyOnline)) {
                 WorkWxUtil wxUtil = new WorkWxUtil();
                 wxUtil.sendMsg("ChenChong|JinLin", applyOnline.getLiaisonMan(), applyOnline.getId().toString());
+                //wxUtil.sendMsg("ChenChong", applyOnline.getLiaisonMan(), applyOnline.getId().toString());
+                Record record2=Db.use("oldDb").findFirst("SELECT * from hyrcb_staff where staff_code =?",applyOnline.getStaffCode());
+
+                Record record=new Record();
+                record.set("type","个人");
+                record.set("idcard_code",applyOnline.getIdcardCode());
+                record.set("liaison_man",applyOnline.getLiaisonMan());
+                record.set("phone",applyOnline.getPhone());
+                record.set("address",applyOnline.getAddress());
+                record.set("loan_quota",applyOnline.getMoney());
+                record.set("staff_code",applyOnline.getStaffCode());
+                record.set("org_code",record2.getStr("org_code"));
+                record.set("state","0");
+                record.set("loan_purpose","");
+                record.set("create_time",new Date());
+                record.set("del_flag","I");
+                Db.use("oldDb").save("hyrcb_loan_reservation",record);
             } else {
                 ajaxResult = AjaxResult.error("保存失败");
             }

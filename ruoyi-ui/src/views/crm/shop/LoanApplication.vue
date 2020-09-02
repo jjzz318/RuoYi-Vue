@@ -23,7 +23,7 @@
           <div style="float:left;">
             <van-icon name="enlarge" size="23" color="#1989fa" />
           </div>
-          <div style="line-height:25px;margin-left: 35px;">点击查看二维码</div>
+          <div style="line-height:25px;margin-left: 35px;" @click="showPopup">点击查看二维码</div>
         </div>
       </div>
     </div>
@@ -101,6 +101,7 @@
         <van-button round block type="info" native-type="submit" @click="onSubmit()">提交</van-button>
       </div>
     </van-form>
+        <van-popup v-model="show"><img :src="'http://cc1212.natappvip.cc/dev-api/profile/'+staffCode+'.png'"></van-popup>
   </div>
 </template>
 
@@ -118,6 +119,8 @@ import { sendVerifyCode } from "@/api/crm/shop/msg.js";
 import { apiGetProduct } from "@/api/crm/product";
 import { getQueryString } from "@/utils/tool.js";
 import { getUserInfo } from "@/api/system/user";
+import { Popup } from 'vant';
+
 export default {
   name: "LoanApplication",
   components: {
@@ -131,6 +134,7 @@ export default {
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
     [Notify.Component.name]: Notify,
+    [Popup.name]:Popup
   },
   created: function () {
     this.getProduct();
@@ -152,6 +156,7 @@ export default {
       staffCode: "",
       avatar: "",
       deptName: "",
+      show: false
     };
   },
   mounted() {
@@ -163,8 +168,12 @@ export default {
     document.querySelector("body").removeAttribute("style");
   },
   methods: {
+    showPopup() {
+      this.show = true;
+    },
     callPhone(){
-      window.location.href = 'tel://'+userInfo.phonenumber
+
+      window.location.href = 'tel://'+this.userInfo.phonenumber
     },
     getUserInfo() {
       this.staffCode = getQueryString("staffCode");
@@ -272,7 +281,7 @@ export default {
   padding: 10px 10px 10px 15px;
 }
 .logo {
-  width: 170px;
+  width: 150px;
 }
 .Photo {
   width: 130px;

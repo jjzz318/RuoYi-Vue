@@ -65,8 +65,8 @@
           <van-checkbox-group v-model="checkboxGroup" direction="horizontal">
             <van-checkbox name="1" shape="square">真实需求</van-checkbox>
             <van-checkbox name="2" shape="square">随意填写</van-checkbox>
-            <van-checkbox name="2" shape="square">不符合标准</van-checkbox>
-            <van-checkbox name="2" shape="square">电话沟通</van-checkbox>
+            <van-checkbox name="3" shape="square">不符合标准</van-checkbox>
+            <van-checkbox name="4" shape="square">电话沟通</van-checkbox>
           </van-checkbox-group>
         </template>
       </van-field>
@@ -135,6 +135,8 @@ export default {
       deptName: "",
       applyInfo: [],
       radio: "1",
+      checkbox: false,
+      checkboxGroup: [],
     };
   },
   mounted() {

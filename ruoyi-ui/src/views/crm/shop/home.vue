@@ -26,7 +26,7 @@
           <div style="float:left;">
             <van-icon name="enlarge" size="23" color="#1989fa" />
           </div>
-          <div style="line-height:25px;margin-left: 35px;">点击查看二维码</div>
+          <div style="line-height:25px;margin-left: 35px;" @click="showPopup">点击查看二维码</div>
         </div>
       </div>
     </div>
@@ -41,15 +41,14 @@
       />
     </van-cell-group>
     <div class="panel_block4">
-      <span style="font-size: 30px;font-weight: bold;">23</span>
-      <div>2020年8月</div>
+      <span style="font-size: 30px;font-weight: bold;">2</span>
+      <div>2020年9月</div>
     </div>
     <van-cell-group class="panel_block3">
       <van-cell
         title="头条"
         icon="card"
         is-link
-        @click="shard('http://cc1212.natappvip.cc/crm/shop/home?staffCode=9622554')"
       />
       <van-cell
         value="昨日，在央视新闻相对论节目中，董明珠回应“如果再跟雷军打赌，赌什么？”：格力在空调领域拥有核心技术，现在是走在领先地位。格力要在保持主业不变的情况下，让中国的装备在世界上叫得响！请雷军提出自己行业的目标。"
@@ -68,6 +67,7 @@
         value="国家金融与发展实验室副主任曾刚称：上半年银保监会紧扣“六保”的目标，特别是保市场主体这方面，出台一系列政策措施，效果还是比较明显的。目前普惠金融的投放量增长较快。"
       />
     </van-cell-group>
+    <van-popup v-model="show"><img :src="'http://cc1212.natappvip.cc/dev-api/profile/'+staffCode+'.png'"></van-popup>
   </div>
 </template>
 
@@ -81,6 +81,7 @@ import { apiListProduct } from "@/api/crm/product";
 import { getUserInfo } from "@/api/system/user";
 import { getQueryString } from "@/utils/tool.js";
 import { wxShare } from "@/utils/wxUtils.js";
+import { Popup } from 'vant';
 export default {
   name: "home",
   components: {
@@ -91,6 +92,7 @@ export default {
     [Icon.name]: Icon,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
+    [Popup.name]:Popup
   },
   data() {
     return {
@@ -101,6 +103,7 @@ export default {
       userInfo: [],
       staffCode: "",
       avatar: "",
+      show: false
     };
   },
   created: function () {
@@ -109,7 +112,10 @@ export default {
   },
   methods: {
     callPhone() {
-      window.location.href = "tel://" + userInfo.phonenumber;
+      window.location.href = "tel://" + this.userInfo.phonenumber;
+    },
+    showPopup() {
+      this.show = true;
     },
     getUserInfo() {
       this.staffCode = getQueryString("staffCode");
@@ -199,10 +205,10 @@ export default {
   padding: 10px 10px 10px 15px;
 }
 .logo {
-  width: 170px;
+  width: 100px;
 }
 .Photo {
-  width: 130px;
+  width: 100px;
   height: 150px;
   border-radius: 8px;
   float: left;

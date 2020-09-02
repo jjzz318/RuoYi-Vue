@@ -23,7 +23,7 @@
           <div style="float:left;">
             <van-icon name="enlarge" size="23" color="#1989fa" />
           </div>
-          <div style="line-height:25px;margin-left: 35px;">点击查看二维码</div>
+          <div style="line-height:25px;margin-left: 35px;" @click="showPopup">点击查看二维码</div>
         </div>
       </div>
     </div>
@@ -43,6 +43,7 @@
       <van-cell title="五折信用卡"  size="large" label="1.满足消费条件，即享1元洗车、10元看电影、10元洗发、5折面包券；2.刷卡享受椒黄路仙150余家商户5折美食" url="https://cc.zj96596.com/bankcoas/mb/?from=singlemessage&isappinstalled=0"/>
       <van-cell title="腾讯联名卡" size="large" label="1.喜欢的权益自己选，加享150元3项自选权益；2.满足消费条件，即享1元洗车、10元看电影、10元洗发、5折面包券；3.刷卡享受椒黄路仙150余家商户5折美食" url="https://wepluscard.qq.com/web/huidu.html?platform=wx&offlineId=2020080421003901303621&channelID=46076&state=&code=0916FtFa1oy2xz0lLrFa1DLuqd26FtFm#/apply/main?platform=wx&channelID=46076"/>
     </van-cell-group>
+    <van-popup v-model="show"><img :src="'http://cc1212.natappvip.cc/dev-api/profile/'+staffCode+'.png'"></van-popup>
   </div>
 </template>
 
@@ -56,6 +57,7 @@ import { apiListProduct } from "@/api/crm/product";
 import { getUserInfo } from "@/api/system/user";
 import { getQueryString } from "@/utils/tool.js";
 import { wxShare } from "@/utils/wxUtils.js";
+import { Popup } from 'vant';
 export default {
   name: "FinanceShop",
   components: {
@@ -66,6 +68,7 @@ export default {
     [Icon.name]: Icon,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
+    [Popup.name]:Popup
   },
   data() {
     return {
@@ -74,7 +77,8 @@ export default {
       otherProductList: [],
       userInfo:[],
       staffCode:'',
-      avatar:''
+      avatar:'',
+            show: false
     }
   },
   created: function () {
@@ -82,8 +86,11 @@ export default {
     this.getUserInfo();
   },
   methods: {
+    showPopup() {
+      this.show = true;
+    },
     callPhone(){
-      window.location.href = 'tel://'+userInfo.phonenumber
+      window.location.href = 'tel://'+this.userInfo.phonenumber
     },
     getUserInfo(){
         this.staffCode=getQueryString("staffCode");
@@ -164,7 +171,7 @@ export default {
   padding: 10px 10px 10px 15px;
 }
 .logo {
-  width: 170px;
+  width: 150px;
 }
 .Photo {
   width: 130px;
