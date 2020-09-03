@@ -36,6 +36,7 @@
                 <div class="pull-right">{{ user.createTime }}</div>
               </li>
             </ul>
+            <userQrCode :user="user" />
           </div>
         </el-card>
       </el-col>
@@ -60,19 +61,20 @@
 
 <script>
 import userAvatar from "./userAvatar";
+import userQrCode from "./userQrCode";
 import userInfo from "./userInfo";
 import resetPwd from "./resetPwd";
 import { getUserProfile } from "@/api/system/user";
 
 export default {
   name: "Profile",
-  components: { userAvatar, userInfo, resetPwd },
+  components: { userAvatar, userInfo, resetPwd, userQrCode },
   data() {
     return {
       user: {},
       roleGroup: {},
       postGroup: {},
-      activeTab: "userinfo"
+      activeTab: "userinfo",
     };
   },
   created() {
@@ -80,12 +82,12 @@ export default {
   },
   methods: {
     getUser() {
-      getUserProfile().then(response => {
+      getUserProfile().then((response) => {
         this.user = response.data;
         this.roleGroup = response.roleGroup;
         this.postGroup = response.postGroup;
       });
-    }
-  }
+    },
+  },
 };
 </script>
