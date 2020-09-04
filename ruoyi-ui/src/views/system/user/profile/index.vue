@@ -36,7 +36,12 @@
                 <div class="pull-right">{{ user.createTime }}</div>
               </li>
             </ul>
-            <userQrCode :user="user" />
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span>二维码</span>
+              </div>
+              <userQrCode :user="user" />
+            </el-card>
           </div>
         </el-card>
       </el-col>
