@@ -6,8 +6,11 @@ package com.hyrcb.hydp;
 
 import com.hyrcb.hydp.common.utils.WeChat.WorkWxUtil;
 import com.hyrcb.hydp.common.utils.WeChat.WxUtil;
+import me.chanjar.weixin.common.service.WxService;
+import me.chanjar.weixin.mp.api.WxMpService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,6 +25,8 @@ import com.LaunchEntry;
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes = LaunchEntry.class)
 public class BaseTest {
+    @Autowired
+    private WxMpService wxMpService;
     @Test
 	public void WorkWxTest(){
         WorkWxUtil workWxUtil=new WorkWxUtil();
@@ -33,6 +38,7 @@ public class BaseTest {
     }
     @Test
     public void WxTest(){
+
         WxUtil wxUtil=new WxUtil();
         String wx=wxUtil.getJsApiSignature("");
         System.out.println(wx);

@@ -7,7 +7,8 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+    qrCode1:''
   },
 
   mutations: {
@@ -19,6 +20,9 @@ const user = {
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
+    },
+    SET_QRCODE1: (state, qrCode) => {
+      state.qrCode1 = qrCode
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -52,6 +56,7 @@ const user = {
         getInfo(state.token).then(res => {
           const user = res.user
           const avatar = user.avatar == "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
+          const qrCode1 = user.qrCode1 == "" ? require("@/assets/image/profile.jpg") : process.env.VUE_APP_BASE_API + user.qrCode1;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
@@ -60,6 +65,8 @@ const user = {
           }
           commit('SET_NAME', user.userName)
           commit('SET_AVATAR', avatar)
+          console.log("断点"+qrCode1);
+          commit('SET_QRCODE1', qrCode1)
           resolve(res)
         }).catch(error => {
           reject(error)

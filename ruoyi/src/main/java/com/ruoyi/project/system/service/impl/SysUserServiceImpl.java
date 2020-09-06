@@ -280,6 +280,19 @@ public class SysUserServiceImpl implements ISysUserService
     }
 
     /**
+     * 修改用户二维码
+     *
+     * @param userName 用户名
+     * @param qrCode 二维码地址
+     * @return 结果
+     */
+    @Override
+    public boolean updateUserQrCode(String userName, String qrCode)
+    {
+        return userMapper.updateUserQrCode(userName, qrCode) > 0;
+    }
+
+    /**
      * 重置用户密码
      * 
      * @param user 用户信息

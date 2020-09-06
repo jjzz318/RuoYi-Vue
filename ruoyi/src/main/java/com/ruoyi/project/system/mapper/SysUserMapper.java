@@ -63,6 +63,15 @@ public interface SysUserMapper
     public int updateUserAvatar(@Param("userName") String userName, @Param("avatar") String avatar);
 
     /**
+     * 修改用户头像
+     *
+     * @param userName 用户名
+     * @param qrCode 二维码地址
+     * @return 结果
+     */
+    public int updateUserQrCode(@Param("userName") String userName, @Param("qrCode") String qrCode);
+
+    /**
      * 重置用户密码
      * 
      * @param userName 用户名

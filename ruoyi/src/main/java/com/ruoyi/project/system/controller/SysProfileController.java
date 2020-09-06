@@ -124,4 +124,27 @@ public class SysProfileController extends BaseController
         }
         return AjaxResult.error("上传图片异常，请联系管理员");
     }
+    /**
+     * 验证码上传
+     */
+    @Log(title = "验证码上传", businessType = BusinessType.UPDATE)
+    @PostMapping("/uploadQrCode")
+    public AjaxResult uploadQrCode(@RequestParam("qrCodefile") MultipartFile file) throws IOException
+    {
+        if (!file.isEmpty())
+        {
+            LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+            String imgUrl = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
+            if (userService.updateUserQrCode(loginUser.getUsername(), imgUrl))
+            {
+                AjaxResult ajax = AjaxResult.success();
+                ajax.put("imgUrl", imgUrl);
+                // 更新缓存用户头像
+                loginUser.getUser().setQrCode1(imgUrl);
+                tokenService.setLoginUser(loginUser);
+                return ajax;
+            }
+        }
+        return AjaxResult.error("上传图片异常，请联系管理员");
+    }
 }

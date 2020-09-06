@@ -71,6 +71,11 @@ public class SysUser extends BaseEntity {
     private String avatar;
 
     /**
+     * 二维码
+     */
+    private String qrCode1;
+
+    /**
      * 密码
      */
     private String password;
@@ -305,6 +310,14 @@ public class SysUser extends BaseEntity {
         this.postName = postName;
     }
 
+    public String getQrCode1() {
+        return qrCode1;
+    }
+
+    public void setQrCode1(String qrCode1) {
+        this.qrCode1 = qrCode1;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -329,6 +342,7 @@ public class SysUser extends BaseEntity {
                 .append("remark", getRemark())
                 .append("dept", getDept())
                 .append("postName", getPostName())
+                .append("qrCode1",getQrCode1())
                 .toString();
     }
 }

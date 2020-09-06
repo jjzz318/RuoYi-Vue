@@ -123,6 +123,16 @@ public interface ISysUserService
     public boolean updateUserAvatar(String userName, String avatar);
 
     /**
+     * 修改二维码
+     *
+     * @param userName 用户名
+     * @param qrCode 二维码地址
+     * @return 结果
+     */
+    public boolean updateUserQrCode(String userName, String qrCode);
+
+
+    /**
      * 重置用户密码
      * 
      * @param user 用户信息

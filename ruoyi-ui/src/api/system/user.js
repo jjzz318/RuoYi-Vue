@@ -131,6 +131,14 @@ export function uploadAvatar(data) {
     data: data
   })
 }
+// 用户上传二维码
+export function uploadQrCode(data) {
+  return request({
+    url: '/system/user/profile/uploadQrCode',
+    method: 'post',
+    data: data
+  })
+}
 
 // 下载用户导入模板
 export function importTemplate() {
