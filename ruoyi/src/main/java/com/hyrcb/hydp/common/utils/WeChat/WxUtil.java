@@ -2,7 +2,9 @@ package com.hyrcb.hydp.common.utils.WeChat;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.hyrcb.hydp.common.core.BeanFactory;
 import com.ruoyi.common.utils.http.HttpUtils;
+import com.ruoyi.framework.redis.RedisCache;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +14,7 @@ public class WxUtil {
     private String appid = "wx002f85d12393d609";
     //secret
     private String secret = "6df62a1b691b32995c0549fc2c6dc4aa";
-    private String timestamp="";
+    private String timestamp = "";
     //腾讯微信服务器
     String baseUrl = "https://api.weixin.qq.com/cgi-bin/";
     //鉴权服务器地址
@@ -22,6 +24,8 @@ public class WxUtil {
     private static String accessToken = "";
     public static WxMenu wxMenu = null;
     public static WxUser wxUser = null;
+
+    private RedisCache redisCache = BeanFactory.getBean(RedisCache.class);
 
     public String getAppid() {
         return appid;
@@ -40,13 +44,13 @@ public class WxUtil {
     }
 
     public WxUtil() {
-        accessToken = this.getAccessToken();
+        accessToken = this.getAccessTokenByCache();
         wxMenu = new WxMenu(accessToken);
         wxUser = new WxUser(appid, secret);
     }
 
     public WxUtil(String appid, String secret) {
-        accessToken = this.getAccessToken();
+        accessToken = this.getAccessTokenByCache();
         wxMenu = new WxMenu(accessToken);
         wxUser = new WxUser(appid, secret);
     }
@@ -61,22 +65,24 @@ public class WxUtil {
 
     /**
      * token
+     * 从缓存中获取ccessToken
      *
      * @return
      */
-    public String getAccessToken() {
-//        WxBen wxBen = CacheKit.get( appid,secret );
-//        if (wxBen == null) {
-//            System.out.println( "开始缓存7788" );
-//            wxBen = new WxBen();
-//            String accessToken = this.doGetAccessToken();
-//            wxBen.setAppid( appid );
-//            wxBen.setSecret( secret );
-//            wxBen.setAccessToken( accessToken );
-//            CacheKit.put( appid,secret,wxBen );
-//        }
-//        return wxBen.getAccessToken();
-        return this.doGetAccessToken();
+    public String getAccessTokenByCache() {
+        String wxAppid = appid + '|' + secret + "_AccessToken";
+        WxBen wxBen = redisCache.getCacheObject(wxAppid);
+        //判断缓存中是不是有AccessToken
+        if (wxBen == null) {
+            wxBen = new WxBen();
+            String accessToken = this.doGetAccessToken();
+            wxBen.setAppid(appid);
+            wxBen.setSecret(secret);
+            wxBen.setAccessToken(accessToken);
+            redisCache.setCacheObject(wxAppid, wxBen);
+            redisCache.expire(wxAppid, 7100);
+        }
+        return wxBen.getAccessToken();
     }
 
     /**
@@ -96,13 +102,30 @@ public class WxUtil {
     }
 
     /**
+     * 从缓存中获取微信JSSDK的Ticket
+     *
+     * @return
+     */
+    public String getJsApiTicketByCache() {
+        String wxAppid = appid + '|' + secret + "_JsApiTicket";
+        String jsApiTicket = "";
+        if (redisCache.getCacheObject(wxAppid) == null) {
+            jsApiTicket = this.doGetJsApiTicket();
+            redisCache.setCacheObject(wxAppid, jsApiTicket);
+            redisCache.expire(wxAppid, 7100);
+        }
+        jsApiTicket = redisCache.getCacheObject(wxAppid);
+        return jsApiTicket;
+    }
+
+    /**
      * 获取微信JSSDK的Ticket
      *
      * @return
      */
-    public String getJsApiTicket() {
+    private String doGetJsApiTicket() {
         String url = baseUrl + "ticket/getticket?access_token=@ACCESS_TOKEN&type=jsapi";
-        url = url.replace("@ACCESS_TOKEN", this.getAccessToken());
+        url = url.replace("@ACCESS_TOKEN", this.getAccessTokenByCache());
         String[] tmpStr = url.split("\\?");
         String ret = HttpUtils.sendGet(tmpStr[0], tmpStr[1]);
         JSONObject jsonObject = JSONUtil.parseObj(ret);
@@ -116,15 +139,15 @@ public class WxUtil {
      * @return
      */
     public String getJsApiSignature(String url) {
-        this.timestamp=this.create_timestamp();
+        this.timestamp = this.create_timestamp();
         Map<String, String> params = new HashMap<String, String>();
         params.put("noncestr", "Wm3WZYTPz0wzccnW");
-        params.put("jsapi_ticket", this.getJsApiTicket());
+        params.put("jsapi_ticket", this.getJsApiTicketByCache());
         params.put("timestamp", this.timestamp);
         params.put("url", url);
-        String sign = FormatUtil.packageSign( params,false );
+        String sign = FormatUtil.packageSign(params, false);
         System.out.println(sign);
-        sign= SHA1Util.encode(sign);
+        sign = SHA1Util.encode(sign);
         return sign;
     }
 
@@ -163,7 +186,7 @@ public class WxUtil {
 
     public String getTemplates() {
         String url = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token=@ACCESS_TOKEN";
-        url = url.replace("@ACCESS_TOKEN", this.getAccessToken());
+        url = url.replace("@ACCESS_TOKEN", this.getAccessTokenByCache());
         String[] tmpStr = url.split("\\?");
         String ret = HttpUtils.sendGet(tmpStr[0], tmpStr[1]);
         return ret;
@@ -171,7 +194,7 @@ public class WxUtil {
 
     public String sendTemplate(String openId) {
         String url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=@ACCESS_TOKEN";
-        url = url.replace("@ACCESS_TOKEN", this.getAccessToken());
+        url = url.replace("@ACCESS_TOKEN", this.getAccessTokenByCache());
         String body = "  {\n" +
                 "           \"touser\":\"" + openId + "\",\n" +
                 "           \"template_id\":\"WTVww4pSu3lckyphCHhxvlOKWD7QS6iT3PEb8Lp-uGE\",    \n" +
@@ -201,7 +224,7 @@ public class WxUtil {
 
     public String getUsers() {
         String url = "https://api.weixin.qq.com/cgi-bin/user/get?access_token=@ACCESS_TOKEN";
-        url = url.replace("@ACCESS_TOKEN", this.getAccessToken());
+        url = url.replace("@ACCESS_TOKEN", this.getAccessTokenByCache());
         String[] tmpStr = url.split("\\?");
         String ret = HttpUtils.sendGet(tmpStr[0], tmpStr[1]);
         return ret;
