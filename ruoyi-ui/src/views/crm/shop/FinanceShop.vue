@@ -2,7 +2,7 @@
   <div id="App">
     <div class="panel_block">
       <div class="Photo">
-          <img :src="avatar" class="Photo" />
+        <img :src="avatar" class="Photo" />
       </div>
       <div class="introduce">
         <div class="title">
@@ -17,7 +17,10 @@
           <div style="float:left;">
             <van-icon name="phone" size="23" color="#1989fa" />
           </div>
-          <div style="line-height:25px;margin-left: 35px;" @click="callPhone">{{userInfo.phonenumber}}</div>
+          <div
+            style="line-height:25px;margin-left: 35px;"
+            @click="callPhone"
+          >{{userInfo.phonenumber}}</div>
         </div>
         <div class="title2">
           <div style="float:left;">
@@ -27,23 +30,52 @@
         </div>
       </div>
     </div>
-        <div class="panel_block2">{{userInfo.remark}}</div>
+    <div class="panel_block2">{{userInfo.remark}}</div>
     <van-cell-group class="panel_block3">
       <van-cell title="贷款产品" icon="card" is-link />
-      <van-cell    v-for="(item, index) in loanProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/shop/LoanApplication?staffCode='+staffCode+'&id='+item.id" />
+      <van-cell
+        v-for="(item, index) in loanProductList"
+        :title="item.name"
+        size="large"
+        :key="index"
+        :label="item.money"
+        @click="showPopup2"
+      />
     </van-cell-group>
 
-    <van-cell-group class="panel_block3">
+    <!-- <van-cell-group class="panel_block3">
       <van-cell title="存款产品" icon="card" is-link />
-      <van-cell    v-for="(item, index) in depProductList" :title="item.name" size="large" :key="index" :label="item.money" :url="'/crm/shop/LoanApplication?staffCode='+staffCode+'&id='+item.id" />
-    </van-cell-group>
+      <van-cell
+        v-for="(item, index) in depProductList"
+        :title="item.name"
+        size="large"
+        :key="index"
+        :label="item.money"
+        :url="'/crm/shop/LoanApplication?staffCode='+staffCode+'&id='+item.id"
+      />
+    </van-cell-group> -->
 
     <van-cell-group class="panel_block3">
       <van-cell title="信用卡" icon="card" is-link />
-      <van-cell title="五折信用卡"  size="large" label="1.满足消费条件，即享1元洗车、10元看电影、10元洗发、5折面包券；2.刷卡享受椒黄路仙150余家商户5折美食" url="https://cc.zj96596.com/bankcoas/mb/?from=singlemessage&isappinstalled=0"/>
-      <van-cell title="腾讯联名卡" size="large" label="1.喜欢的权益自己选，加享150元3项自选权益；2.满足消费条件，即享1元洗车、10元看电影、10元洗发、5折面包券；3.刷卡享受椒黄路仙150余家商户5折美食" url="https://wepluscard.qq.com/web/huidu.html?platform=wx&offlineId=2020080421003901303621&channelID=46076&state=&code=0916FtFa1oy2xz0lLrFa1DLuqd26FtFm#/apply/main?platform=wx&channelID=46076"/>
+      <van-cell
+        title="五折信用卡"
+        size="large"
+        label="1.满足消费条件，即享1元洗车、10元看电影、10元洗发、5折面包券；2.刷卡享受椒黄路仙150余家商户5折美食"
+        url="https://cc.zj96596.com/bankcoas/mb/?from=singlemessage&isappinstalled=0"
+      />
+      <van-cell
+        title="腾讯联名卡"
+        size="large"
+        label="1.喜欢的权益自己选，加享150元3项自选权益；2.满足消费条件，即享1元洗车、10元看电影、10元洗发、5折面包券；3.刷卡享受椒黄路仙150余家商户5折美食"
+        url="https://wepluscard.qq.com/web/huidu.html?platform=wx&offlineId=2020080421003901303621&channelID=46076&state=&code=0916FtFa1oy2xz0lLrFa1DLuqd26FtFm#/apply/main?platform=wx&channelID=46076"
+      />
     </van-cell-group>
-    <van-popup v-model="show"><img :src="'http://cc1212.natappvip.cc/dev-api/profile/'+staffCode+'.png'"></van-popup>
+    <van-popup v-model="show">
+      <img :src="'http://cc1212.natappvip.cc/dev-api/profile/'+staffCode+'.png'" />
+    </van-popup>
+    <van-popup v-model="show2">
+      <img :src="qrCode1" />
+    </van-popup>
   </div>
 </template>
 
@@ -57,7 +89,7 @@ import { apiListProduct } from "@/api/crm/product";
 import { getUserInfo } from "@/api/system/user";
 import { getQueryString } from "@/utils/tool.js";
 import { wxShare } from "@/utils/wxUtils.js";
-import { Popup } from 'vant';
+import { Popup } from "vant";
 export default {
   name: "FinanceShop",
   components: {
@@ -68,18 +100,20 @@ export default {
     [Icon.name]: Icon,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
-    [Popup.name]:Popup
+    [Popup.name]: Popup,
   },
   data() {
     return {
       loanProductList: [],
       depProductList: [],
       otherProductList: [],
-      userInfo:[],
-      staffCode:'',
-      avatar:'',
-            show: false
-    }
+      userInfo: [],
+      staffCode: "",
+      avatar: "",
+      qrCode1: "",
+      show: false,
+      show2: false,
+    };
   },
   created: function () {
     this.getList();
@@ -89,38 +123,41 @@ export default {
     showPopup() {
       this.show = true;
     },
-    callPhone(){
-      window.location.href = 'tel://'+this.userInfo.phonenumber
+    showPopup2() {
+      this.show2 = true;
     },
-    getUserInfo(){
-        this.staffCode=getQueryString("staffCode");
-        getUserInfo(this.staffCode).then((response) => {
+    callPhone() {
+      window.location.href = "tel://" + this.userInfo.phonenumber;
+    },
+    getUserInfo() {
+      this.staffCode = getQueryString("staffCode");
+      getUserInfo(this.staffCode).then((response) => {
         this.userInfo = response.data;
-        this.avatar = process.env.VUE_APP_BASE_API  + this.userInfo.avatar;
+        this.avatar = process.env.VUE_APP_BASE_API + this.userInfo.avatar;
+        this.qrCode1 = process.env.VUE_APP_BASE_API + this.userInfo.qrCode1;
         this.deptName = this.userInfo.dept.deptName;
         let title = this.userInfo.nickName + " 的金融微店";
-        let desc=this.userInfo.remark;
+        let desc = this.userInfo.remark;
         let link = window.location.href;
         let imgUrl = "http://cc1212.natappvip.cc" + this.avatar;
-        console.log(link)
-        wxShare(title,desc,link,imgUrl);
-      
-        });
+        console.log(link);
+        wxShare(title, desc, link, imgUrl);
+      });
     },
     /** 查询产品管理列表 */
     getList() {
       this.loading = true;
-      apiListProduct({type: "1001"}).then((response) => {
+      apiListProduct({ type: "1001" }).then((response) => {
         this.loanProductList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
-      apiListProduct({type: "1002"}).then((response) => {
+      apiListProduct({ type: "1002" }).then((response) => {
         this.depProductList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
-      apiListProduct({type: "1003"}).then((response) => {
+      apiListProduct({ type: "1003" }).then((response) => {
         this.otherProductList = response.rows;
         this.total = response.total;
         this.loading = false;

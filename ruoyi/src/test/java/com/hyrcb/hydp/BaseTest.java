@@ -4,6 +4,7 @@
  */
 package com.hyrcb.hydp;
 
+import com.hyrcb.hydp.common.utils.QrCodeUtil;
 import com.hyrcb.hydp.common.utils.WeChat.WorkWxUtil;
 import com.hyrcb.hydp.common.utils.WeChat.WxUtil;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.LaunchEntry;
+
+import java.io.IOException;
 
 /**
  * Description: 
@@ -33,10 +36,11 @@ public class BaseTest {
         System.out.println(ret);
     }
     @Test
-    public void WxTest(){
+    public void WxTest() throws IOException {
 
-        WxUtil wxUtil=new WxUtil();
-        String wx=wxUtil.getJsApiSignature("");
-        System.out.println(wx);
+//        WxUtil wxUtil=new WxUtil();
+//        String wx=wxUtil.getJsApiSignature("");
+//        System.out.println(wx);
+        QrCodeUtil.createQRCode("http://www.baidu.com","d:\\","1.png");
     }
 }

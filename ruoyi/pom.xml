@@ -290,7 +290,11 @@
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
-		
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.0.0</version>
+		</dependency>
         <!-- 定时任务 -->
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
