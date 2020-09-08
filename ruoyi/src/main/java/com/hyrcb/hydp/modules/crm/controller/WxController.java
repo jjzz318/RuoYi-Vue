@@ -1,10 +1,12 @@
 package com.hyrcb.hydp.modules.crm.controller;
 
 
+import com.hyrcb.hydp.common.utils.QrCodeUtil;
 import com.hyrcb.hydp.common.utils.WeChat.JsApiBen;
 import com.hyrcb.hydp.common.utils.WeChat.WxUtil;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
+import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,13 @@ public class WxController extends BaseController {
         jsApiBen.setNonceStr("Wm3WZYTPz0wzccnW");
         jsApiBen.setSignature(wxUtil.getJsApiSignature(url));
         jsApiBen.setTimestamp(wxUtil.getTimestamp());
+        try {
+            String path= RuoYiConfig.getProfile()+"\\shop\\";
+            String staffCode=url.split("=")[1];
+            QrCodeUtil.createQRCode(url,path,staffCode);
+        }catch (Exception e){
 
+        }
 
         return AjaxResult.success(jsApiBen);
     }

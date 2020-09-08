@@ -1,10 +1,13 @@
 package com.ruoyi.project.system.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hyrcb.hydp.common.utils.QrCodeUtil;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
+import com.ruoyi.framework.config.RuoYiConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -62,6 +65,18 @@ public class SysUserController extends BaseController
     @GetMapping(value = { "/api/getInfo/{staffCode}"})
     public AjaxResult apiGetInfo(@PathVariable("staffCode" ) String staffCode)
     {
+        String path=RuoYiConfig.getProfile()+"\\shop\\";
+        String fileName=staffCode;
+        File file = new File(path+fileName);
+        if(!file.exists()){
+
+            try {
+                QrCodeUtil.createQRCode("http://www.baidu.com",path,fileName);
+            }catch (Exception e){
+
+            }
+        }
+        System.out.println(path);
         AjaxResult ajax = AjaxResult.success();
         if (StringUtils.isNotNull(staffCode))
         {
@@ -75,7 +90,10 @@ public class SysUserController extends BaseController
     @GetMapping("/api/getList")
     public AjaxResult getList()
     {
-        List<Record> recordList= Db.find("SELECT * from sys_user");
+        List<Record> recordList= Db.find("SELECT  user_name,nick_name,avatar,b.dept_name,post_name from sys_user a \n" +
+                "left join sys_dept b on a.dept_id =b.dept_id left join (\n" +
+                "\tSELECT user_id,min(T1.post_id ) post_id,T2.post_name from sys_user_post T1 left join sys_post T2 on T1.post_id=T2.post_id  group by user_id,T2.post_name\n" +
+                ") c on a.user_id = c.user_id where a.del_flag =0 and a.user_id<>1");
         return AjaxResult.success(recordList);
     }
     /**

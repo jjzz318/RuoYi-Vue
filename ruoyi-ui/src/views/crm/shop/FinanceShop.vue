@@ -10,7 +10,7 @@
         </div>
         <div class="title2">
           <b>{{userInfo.nickName}}</b>
-          <span style="margin-left: 15px;font-weight:bold;">{{userInfo.dept.deptName}}</span>
+          <span style="margin-left: 15px;font-weight:bold;">{{deptName}}</span>
         </div>
         <div class="title3">{{userInfo.postName}}</div>
         <div class="title2">
@@ -71,10 +71,10 @@
       />
     </van-cell-group>
     <van-popup v-model="show">
-      <img :src="'http://cc1212.natappvip.cc/dev-api/profile/'+staffCode+'.png'" />
+      <img :src="url+staffCode+'.png'" style="width:200px;height:200px;"/>
     </van-popup>
     <van-popup v-model="show2">
-      <img :src="qrCode1" />
+      <img :src="qrCode1" style="width:200px;height:200px;"/>
     </van-popup>
   </div>
 </template>
@@ -110,12 +110,17 @@ export default {
       userInfo: [],
       staffCode: "",
       avatar: "",
+      deptName:'',
       qrCode1: "",
       show: false,
       show2: false,
+      url:'',
     };
   },
   created: function () {
+    let href = window.location.href;
+    this.url="http://"+href.split('/')[2]+process.env.VUE_APP_BASE_API+"/profile/shop/";
+    console.log(this.url)
     this.getList();
     this.getUserInfo();
   },
@@ -139,7 +144,7 @@ export default {
         let title = this.userInfo.nickName + " 的金融微店";
         let desc = this.userInfo.remark;
         let link = window.location.href;
-        let imgUrl = "http://cc1212.natappvip.cc" + this.avatar;
+        let imgUrl = "http://"+href.split('/')[2] + this.avatar;
         console.log(link);
         wxShare(title, desc, link, imgUrl);
       });
