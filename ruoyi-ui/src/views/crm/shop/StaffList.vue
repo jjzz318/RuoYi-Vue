@@ -6,7 +6,7 @@
     <van-card
       v-for="(item, userCount) in userlist"
       class="panel_block3"
-      :thumb-link="url2+item.columns.user_name"
+      :thumb-link="url2+'9622554'"
       :desc="'柜员号：'+item.columns.user_name"
       :title="'姓名：'+item.columns.nick_name"
       :thumb="url+item.columns.avatar"
