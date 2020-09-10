@@ -41,3 +41,34 @@ export function getJsApiSignature(url) {
         data: url
     })
 }
+export function getAuthorizeUrl(redirectUri,currentUrl) {
+    const data = {
+        redirectUri,
+        currentUrl
+      }
+    return request({
+        url: '/wx/getAuthorizeUrl',
+        method: 'post',
+        data: data
+    })
+}
+
+export function getWxUserInfo(openid,staffCode) {
+    return request({
+        url: '/wx/getWxUserInfo?openid='+openid+'&staffCode='+staffCode,
+        method: 'get'
+    })
+}
+
+export function recordClick(openId,staffCode,productId) {
+    const data = {
+        openId,
+        staffCode,
+        productId
+      }
+    return request({
+        url: '/wx/recordClick',
+        method: 'post',
+        data: data
+    })
+}

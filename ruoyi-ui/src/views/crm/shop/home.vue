@@ -205,10 +205,10 @@ export default {
   padding: 10px 10px 10px 15px;
 }
 .logo {
-  width: 100px;
+  width: 130px;
 }
 .Photo {
-  width: 100px;
+  width: 130px;
   height: 150px;
   border-radius: 8px;
   float: left;

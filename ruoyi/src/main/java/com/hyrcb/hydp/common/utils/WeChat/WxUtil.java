@@ -11,16 +11,19 @@ import java.util.Map;
 
 public class WxUtil {
     //appid
-    private String appid = "wx002f85d12393d609";
+    private String appid = "wx002f85d12393d609";//单位
+    //private String appid = "wxfdbe272d60dc64f7";//易学
+
     //secret
-    private String secret = "6df62a1b691b32995c0549fc2c6dc4aa";
+    private String secret = "6df62a1b691b32995c0549fc2c6dc4aa";//单位
+    //private String secret = "fc06d40a24d83c0589525fa1d5def428";//易学
     private String timestamp = "";
     //腾讯微信服务器
     String baseUrl = "https://api.weixin.qq.com/cgi-bin/";
     //鉴权服务器地址
     private static String authorize_uri = "https://open.weixin.qq.com/connect/oauth2/authorize";
     //微信鉴权回调服务器
-    //private String callback_uri = "http://cc1212.natappvip.cc/exue/user/weXinAuth";
+
     private static String accessToken = "";
     public static WxMenu wxMenu = null;
     public static WxUser wxUser = null;
@@ -161,8 +164,8 @@ public class WxUtil {
      * @param snsapiBase snsapi_base（不弹出授权页面，只能拿到用户openid）snsapi_userinfo（弹出授权页面，这个可以通过 openid 拿到昵称、性别、所在地）
      * @return url
      */
-    public String getAuthorizeURL(String callback_uri, boolean snsapiBase) {
-        return getAuthorizeURL(appid, callback_uri, null, snsapiBase);
+    public String getAuthorizeURL(String callback_uri,String state, boolean snsapiBase) {
+        return getAuthorizeURL(appid, callback_uri, state, snsapiBase);
     }
 
     public String getAuthorizeURL(String appId, String redirectUri, String state, boolean snsapiBase) {
@@ -178,8 +181,9 @@ public class WxUtil {
         if (state == null || state == "") {
             params.put("state", "wx#wechat_redirect");
         } else {
-            params.put("state", state.concat("#wechat_redirect"));
+            params.put("state", state+"#wechat_redirect");
         }
+        params.put("connect_redirect","1");
         String para = FormatUtil.packageSign(params, false);
         return authorize_uri + "?" + para;
     }
